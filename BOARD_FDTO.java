@@ -47,3 +47,4 @@ public class BOARD_FDTO {
 		U_ID = u_ID;
 	}
 }
+//Test 중
