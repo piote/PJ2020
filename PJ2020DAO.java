@@ -228,6 +228,44 @@ public class PJ2020DAO {
 			}
 		}
 	
+	//로그인(2)
+		public int checkUser(String id, String pwd) {
+			int check = 0;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				con = getConnection();
+				String sql = "SELECT U_ID, U_PW FROM WRITER WHERE U_ID=?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, id);
+				
+				rs = pstmt.executeQuery();
+				
+				if(rs.next()) {
+					String dbpwd = rs.getString("U_PW");
+					if(dbpwd.equals(pwd)) {
+						check=1;
+					}else {	//id는 있으나 pwd가 틀리다.
+						check=0;
+					}
+				}else {
+					check=-1;
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}finally {
+				try { 
+					if(rs!=null) rs.close();
+					if(pstmt !=null) pstmt.close();
+					if(con != null)con.close();
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return check;
+		}
+	
 }
 
 
