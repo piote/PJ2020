@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>로그인</title>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<meta charset="UTF-8">
+	<title>로그인</title>
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link rel="stylesheet" href="css/login.css">
@@ -22,12 +22,12 @@
             <h4 class="card-title text-center mb-4 mt-1">로그인</h4>
             <form class="form-signin" action="loginPro.jsp" method="post">
               <div class="form-label-group">
-                <input type="text" id="inputId" class="form-control" placeholder="아이디" required autofocus>
+                <input type="text" name="id" class="form-control" required autofocus>
                 <label for="inputId">아이디</label>
               </div>
               <br>
               <div class="form-label-group">
-                <input type="password" id="inputPassword" class="form-control" placeholder="비밀번호" required>
+                <input type="password" name="pwd" class="form-control"required>
                 <label for="inputPassword">비밀번호</label>
               </div>
               <br>
@@ -36,11 +36,14 @@
               <div class="form-group">
               <p class="text-center"><a href="#" class="btn">아이디 비밀번호 찾기</a>
 							<a href=signUp.jsp class="btn">회원가입</a></p>
+							
+							</div>
             </form>
           </div>
         </div>
       </div>
     </div>
   </div>
+  
 </body>
 </html>
