@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
+<%@page import="csdit.BOARD_FDTO, java.util.ArrayList, csdit.PJ2020DAO"%>
+<%
+	BOARD_FDTO dto = new BOARD_FDTO();
+	PJ2020DAO	dbPro = new PJ2020DAO();
+	ArrayList<BOARD_FDTO> dtos = dbPro.list_F();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <style>
@@ -15,29 +21,10 @@
 	<h2 class="text-center">자유 게시판</h2>
 	
 	<%
-	Class.forName("oracle.jdbc.driver.OracleDriver");
-	String url = "jdbc:oracle:thin:@//localhost:1521/xepdb1";
-	String id = "ANIMAL";
-	String pass = "1111";
-	int total = 0;
-	
-	try {
-		Connection con = DriverManager.getConnection(url,id,pass);
-		Statement stmt = con.createStatement();
-
-		String sqlCount = "SELECT COUNT(*) FROM BOARD_F";
-		ResultSet rs = stmt.executeQuery(sqlCount);
-		
-		if(rs.next()){
-			total = rs.getInt(1);
-		}
-		rs.close();
+	  dto = dtos.get(0);
+		int total = dto.getF_Total();
 		out.print("총 게시물 : " + total + "개");
-		
-		String sqlList = "SELECT F_NUM, U_ID, F_TITLE, F_DATE  from board_f order by F_NUM DESC";
-		rs = stmt.executeQuery(sqlList);
-		
-%>
+	%>
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr height="4"><td width="4"></td></tr>
  <tr style="background:url('') repeat-x; text-align:center;">
@@ -57,30 +44,26 @@
 <%
 	 	} else {
 	 		
-		while(rs.next()) {
-			int idx = rs.getInt(1);
-			String U_ID = rs.getString(2);
-			String F_TITLE = rs.getString(3);
-			String F_DATE = rs.getString(4);					
+	 		for(int i=0; i<dtos.size(); i++){
+				dto = dtos.get(i);
+				int num = dto.getF_NUM();
+				String title = dto.getF_TITLE();
+				String date = dto.getF_DATE();
+				String content = dto.getF_CONTENT();
+				String writer = dto.getU_ID();					
 %>
 <tr height="25" align="center">
 	<td>&nbsp;</td>
-	<td><%=idx %></td>
-	<td align="left"><%=F_TITLE %></td>
-	<td align="center"><%=U_ID %></td>
-	<td align="center"><%=F_DATE %></td>
+	<td><%=num %></td>
+	<td align="left"><%=title %></td>
+	<td align="center"><%=writer %></td>
+	<td align="center"><%=date %></td>
 	<td>&nbsp;</td>
 </tr>
   <tr height="1" bgcolor="#D2D2D2"><td colspan="6"></td></tr>
 <% 
-		}
-	} 
-	rs.close();
-	stmt.close();
-	con.close();
-} catch(SQLException e) {
-	out.println( e.toString() );
-}
+	 		}
+	}
 %>
  <tr height="1" bgcolor="#82B5DF"><td colspan="6" width="752"></td></tr>
  </table>
