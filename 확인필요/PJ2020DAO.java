@@ -57,12 +57,10 @@ public class PJ2020DAO {
 				pstmt.setString(1, dto.getName());
 				pstmt.setString(2, dto.getPwd());
 				pstmt.setString(3, dto.getId());
-				pstmt.executeUpdate();
 			}else if(flag.equals("d")) {
 				sql = "delete from WRITER where U_ID=?";
 				pstmt = con.prepareStatement(sql);
 				pstmt.setString(1, dto.getId());
-				pstmt.executeUpdate();
 			}
 			pstmt.executeUpdate();
 		}catch(Exception e) {
@@ -98,12 +96,10 @@ public class PJ2020DAO {
 					pstmt.setString(2, dto.getF_DATE());
 					pstmt.setString(3, dto.getF_CONTENT());
 					pstmt.setInt(4, dto.getF_NUM());
-					pstmt.executeUpdate();
 				}else if(flag.equals("d")) {
 					sql = "delete from BOARD_F where F_NUM=?";
 					pstmt = con.prepareStatement(sql);
 					pstmt.setInt(1, dto.getF_NUM());
-					pstmt.executeUpdate();
 				}
 				pstmt.executeUpdate();
 			}catch(Exception e) {
@@ -118,39 +114,88 @@ public class PJ2020DAO {
 			}
 		}
 		//list 자유게시판
-				public ArrayList<BOARD_FDTO> list_F(){
-					//db검색정보 저장위해 arraylist생성
-					ArrayList<BOARD_FDTO> dtos = new ArrayList<BOARD_FDTO>();
-						Connection con=null;
-						Statement stmt = null;
-						ResultSet rs = null;
-						
-						try {
-							con = getConnection();
-							String sql= "select * from BOARD_F ORDER BY F_DATE";
-							stmt = con.createStatement();
-							rs = stmt.executeQuery(sql);
-							
-							while(rs.next()) {
-								int num = rs.getInt("F_NUM");
-								String title = rs.getString("F_TITLE");
-								String date = rs.getString("F_DATE");
-								String content = rs.getString("F_CONTENT");
-								String writer = rs.getString("U_ID");
-								BOARD_FDTO dto = new BOARD_FDTO(num, title, date, content, writer);
-								dtos.add(dto);
-							}
-						}catch(Exception e) {
-							e.printStackTrace();
-						}finally {
-							try { 
-								if(rs!=null) rs.close();
-								if(stmt!=null)stmt.close();
-								if(con!=null) con.close();
-							}catch(Exception e){e.printStackTrace();}
-						}	
-						return dtos;
-				}
+		public ArrayList<BOARD_FDTO> list_F(){
+			//db검색정보 저장위해 arraylist생성
+			ArrayList<BOARD_FDTO> dtos = new ArrayList<BOARD_FDTO>();
+				Connection con=null;
+				Statement stmt = null;
+				ResultSet rs = null;
+				
+				try {
+					con = getConnection();
+					stmt = con.createStatement();
+					int total = 0;
+					String sqlCount = "SELECT COUNT(*) FROM BOARD_F";
+					rs = stmt.executeQuery(sqlCount);
+					if(rs.next()){
+						total = rs.getInt(1);
+					}
+												
+					String sql= "select * from BOARD_F ORDER BY F_NUM DESC";
+					rs = stmt.executeQuery(sql);					
+					
+					while(rs.next()) {
+						int num = rs.getInt("F_NUM");
+						String title = rs.getString("F_TITLE");
+						String date = rs.getString("F_DATE");
+						String content = rs.getString("F_CONTENT");
+						String writer = rs.getString("U_ID");
+						BOARD_FDTO dto = new BOARD_FDTO(num, title, date, content, writer);
+						dto.setF_Total(total);
+						dtos.add(dto);
+					}
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { 
+						if(rs!=null) rs.close();
+						if(stmt!=null)stmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e){e.printStackTrace();}
+				}	
+				return dtos;
+		}
+		//자유게시판 값 하나 가져오기
+		public BOARD_FDTO BOARD_F(int F_NUM){
+
+				Connection con=null;
+				Statement stmt = null;
+				ResultSet rs = null;
+				BOARD_FDTO dto = new BOARD_FDTO();
+			
+				
+				try {
+					con = getConnection();
+					stmt = con.createStatement();
+												
+					String sql= "select * from BOARD_F where F_NUM=?";//받은 자유게시판 아이디로 검색
+					PreparedStatement pstmt = con.prepareStatement(sql);
+					pstmt.setInt(1, F_NUM);
+					
+					rs = pstmt.executeQuery();					
+					
+					while(rs.next()) {//값을 dto에 넣는다.
+						dto.setF_NUM(rs.getInt("F_NUM")); 
+						dto.setF_TITLE(rs.getString("F_TITLE"));
+						dto.setF_DATE(rs.getString("F_DATE"));
+						dto.setF_CONTENT(rs.getString("F_CONTENT"));
+						dto.setU_ID(rs.getString("U_ID"));	
+					}
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { 
+						if(rs!=null) rs.close();
+						if(stmt!=null)stmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e){e.printStackTrace();}
+				}	
+				return dto;//리턴
+		}
+		
+		
 				//listUser
 				public ArrayList<WRITERDTO> listUser(){
 					
@@ -195,15 +240,11 @@ public class PJ2020DAO {
 						String sql = "SELECT U_ID, U_PW FROM WRITER WHERE U_ID=?";
 						pstmt = con.prepareStatement(sql);
 						pstmt.setString(1, id);
-
+						
 						rs = pstmt.executeQuery();
-							
-						String dbpwd = null;
-						while(rs.next()) {
-							dbpwd = rs.getString("U_PW");
-						}
-						if(dbpwd.equals(pwd)) {
-							
+						
+						if(rs.next()) {
+							String dbpwd = rs.getString("U_PW");
 							if(dbpwd.equals(pwd)) {
 								check=1;
 							}else {	//id는 있으나 pwd가 틀리다.
@@ -265,6 +306,7 @@ public class PJ2020DAO {
 				}
 			}
 		}
+		
 	
 }
 
