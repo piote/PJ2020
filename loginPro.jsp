@@ -12,10 +12,6 @@
 		
 		if(check == 1) {
 			session.setAttribute("id", id);
-			//Cookie cookie = new Cookie("id", id);
-			//cookie.setMaxAge(20*60);
-			//response.addCookie(cookie);
-			//response.sendRedirect("loginOk.jsp");
 			%><jsp:forward page="main.jsp">
 				<jsp:param value="<%=id%>" name="id"/>
 		</jsp:forward>
