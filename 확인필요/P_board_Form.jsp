@@ -12,7 +12,7 @@
 
 	String id = null;
 
-	if(session.getAttribute("id") == null) {
+	if(session.getAttribute("id") == null) {//현제 있는 세션을 확인하여 로그인 되어있지 않으면 로그인 화면으로 이동
 		%>
 		<script>
 		alert("로그인후 이용가능합니다.");
