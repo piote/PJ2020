@@ -39,42 +39,79 @@ public class PJ2020DAO {
 		return con;
 	}
 	//가입유저중복 체크
-	public Boolean U_ID_Check(String U_ID){
+		public Boolean U_ID_Check(String U_ID){
 
-			Connection con=null;
-			Statement stmt = null;
-			ResultSet rs = null;
-			String ID = null;//값을 저장할 변수
-			Boolean Check = false;
-			
-			try {
-				con = getConnection();
-				stmt = con.createStatement();
-											
-				String sql= "select U_ID from WRITER where U_ID=?";//입력한 id가 있는 지 검색
-				PreparedStatement pstmt = con.prepareStatement(sql);
-				pstmt.setString(1, U_ID);
+				Connection con=null;
+				Statement stmt = null;
+				ResultSet rs = null;
+				String ID = null;//값을 저장할 변수
+				Boolean Check = false;
 				
-				rs = pstmt.executeQuery();					
+				try {
+					con = getConnection();
+					stmt = con.createStatement();
+												
+					String sql= "select U_ID from WRITER where U_ID=?";//입력한 id가 있는 지 검색
+					PreparedStatement pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, U_ID);
+					
+					rs = pstmt.executeQuery();					
+					
+					while(rs.next()) {//값을 저장.
+						ID = rs.getString("U_ID"); 	
+					}
+					
+					if(ID == null)//값이 엇다면 null이고 null이면 체크를 true로 만듬
+						Check = true;
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { 
+						if(rs!=null) rs.close();
+						if(stmt!=null)stmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e){e.printStackTrace();}
+				}	
+				return Check;//리턴
+		}
+		//관리자 유저 확인 관리자라면 true
+		public Boolean MASTER_Check(String U_ID){
+
+				Connection con=null;
+				Statement stmt = null;
+				ResultSet rs = null;
+				String CLASS = null;//값을 저장할 변수
+				Boolean Check = false;
 				
-				while(rs.next()) {//값을 저장.
-					ID = rs.getString("U_ID"); 	
-				}
-				
-				if(ID == null)//값이 엇다면 null이고 null이면 체크를 true로 만듬
-					Check = true;
-				
-			}catch(Exception e) {
-				e.printStackTrace();
-			}finally {
-				try { 
-					if(rs!=null) rs.close();
-					if(stmt!=null)stmt.close();
-					if(con!=null) con.close();
-				}catch(Exception e){e.printStackTrace();}
-			}	
-			return Check;//리턴
-	}
+				try {
+					con = getConnection();
+					stmt = con.createStatement();
+												
+					String sql= "select W_C from WRITER_CLASS where U_ID=?";//입력한 id가 있는 지 검색
+					PreparedStatement pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, U_ID);
+					
+					rs = pstmt.executeQuery();					
+					
+					while(rs.next()) {//값을 저장.
+						CLASS = rs.getString("W_C"); 	
+					}
+					
+					if(CLASS != null)//값이 없다면 null이고 있다면 마스터이므로 체크를 true로 만듬
+						Check = true;
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { 
+						if(rs!=null) rs.close();
+						if(stmt!=null)stmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e){e.printStackTrace();}
+				}	
+				return Check;//리턴
+		}
 	//입력/변경/삭제 함수.
 	public void WRITERChange(WRITERDTO dto, String flag) {
 		Connection con = null; PreparedStatement pstmt = null;
