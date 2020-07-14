@@ -11,6 +11,23 @@
 <html>
 <style>
 	#areaMain{padding:10%; margin-left:10%; margin-right:10%;}
+	.main_list {
+    width: 1000px;
+	}
+	.list_start {
+    text-align: left;
+	}
+	.list_detail {
+    display: inline-block;
+    width: 220px;
+    height: 260px;
+		border: 1px solid;
+    margin-bottom: 5px;
+	}
+	.aText{
+	 	color: black; /*글자 색변경*/
+	}
+	
 </style>
 
  <head>
@@ -26,25 +43,9 @@
 		int total = dto.getP_Total();
 		out.print("총 게시물 : " + total + "개");
 	%>
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr height="4"><td width="4"></td></tr>
- <tr style="background:url('') repeat-x; text-align:center;">
-   <td width="5"><img src="" width="4" height="30" /></td>
-   <td width="73">번호</td>
-   <td width="379">제목</td>
-   <td width="73">작성자</td>
-   <td width="164">작성일</td>  
-   <td width="7"><img src="" width="4" height="30" /></td>
-  </tr>
-<%
-	if(total==0) {
-%>
-	 		<tr align="center" bgcolor="#FFFFFF" height="30">
-	 	   <td colspan="6">등록된 글이 없습니다.</td>
-	 	  </tr>
-<%
-	 	} else {
-	 		
+	<div class="main_list">
+		<div class="list_start">
+		<%	 		
 	 		for(int i=0; i<dtos.size(); i++){
 				dto = dtos.get(i);
 				int num = dto.getP_NUM();
@@ -52,30 +53,22 @@
 				String date = dto.getP_DATE();
 				String file = dto.getP_FILE();
 				String writer = dto.getP_ID();					
-%>
-<tr height="25" align="center">
-	<td>&nbsp;</td>
-	<td><%=num %></td>
-	<td align="left"><%=title %></a></td>
-	<td align="left"><a href="P_BOARD.jsp?num=<%=num %>"><img src="http://localhost:8080/webPJ2020_1/uploadFiles/<%=file%>"></a></td>
-	<td align="center"><%=writer %></td>
-	<td align="center"><%=date %></td>
-	<td>&nbsp;</td>
-</tr>
-  <tr height="1" bgcolor="#D2D2D2"><td colspan="6"></td></tr>
+%>	
+			<div class="list_detail">
+				<a class="aText" href="P_BOARD.jsp?num=<%=num %>">
+					<img src="http://localhost:8080/webPJ2020_1/uploadFiles/<%=file%>" width="200" height="200"/>
+					<%=title %><br>
+					<%=writer %>
+				</a>
+			</div>
 <% 
 	 		}
-	}
-%>
- <tr height="1" bgcolor="#82B5DF"><td colspan="6" width="752"></td></tr>
- </table>
- 
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr><td colspan="4" height="5"></td></tr>
-  <tr align="center">
-  	<td><a href = "P_board_Form.jsp" class="btn">글쓰기</a></td>
-  </tr>
-</table>
+%>	
+			
+		</div>
+		<a  href = "P_board_Form.jsp" class="btn">글쓰기</a>
+	</div>
+
 </section>
 </body> 
 
