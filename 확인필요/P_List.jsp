@@ -5,13 +5,14 @@
 <%
 	BOARD_PDTO dto = new BOARD_PDTO();
 	PJ2020DAO	dbPro = new PJ2020DAO();
-	ArrayList<BOARD_PDTO> dtos = dbPro.list_P();
+	ArrayList<BOARD_PDTO> dtos = dbPro.list_P(); 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <style>
 	#areaMain{padding:10%; margin-left:10%; margin-right:10%;}
 </style>
+
  <head>
  <title>게시판</title>
  </head>
@@ -72,9 +73,11 @@
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr><td colspan="4" height="5"></td></tr>
   <tr align="center">
-  	<td><a href="P_board_Form.jsp" class="btn">글쓰기</a></td>
+  	<td><a href = "P_board_Form.jsp" class="btn">글쓰기</a></td>
   </tr>
 </table>
 </section>
 </body> 
+
 </html>
+
