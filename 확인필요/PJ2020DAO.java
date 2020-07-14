@@ -114,86 +114,168 @@ public class PJ2020DAO {
 			}
 		}
 		//list 자유게시판
-		public ArrayList<BOARD_FDTO> list_F(){
-			//db검색정보 저장위해 arraylist생성
-			ArrayList<BOARD_FDTO> dtos = new ArrayList<BOARD_FDTO>();
-				Connection con=null;
-				Statement stmt = null;
-				ResultSet rs = null;
-				
-				try {
-					con = getConnection();
-					stmt = con.createStatement();
-					int total = 0;
-					String sqlCount = "SELECT COUNT(*) FROM BOARD_F";
-					rs = stmt.executeQuery(sqlCount);
-					if(rs.next()){
-						total = rs.getInt(1);
-					}
-												
-					String sql= "select * from BOARD_F ORDER BY F_NUM DESC";
-					rs = stmt.executeQuery(sql);					
-					
-					while(rs.next()) {
-						int num = rs.getInt("F_NUM");
-						String title = rs.getString("F_TITLE");
-						String date = rs.getString("F_DATE");
-						String content = rs.getString("F_CONTENT");
-						String writer = rs.getString("U_ID");
-						BOARD_FDTO dto = new BOARD_FDTO(num, title, date, content, writer);
-						dto.setF_Total(total);
-						dtos.add(dto);
-					}
-					
-				}catch(Exception e) {
-					e.printStackTrace();
-				}finally {
-					try { 
-						if(rs!=null) rs.close();
-						if(stmt!=null)stmt.close();
-						if(con!=null) con.close();
-					}catch(Exception e){e.printStackTrace();}
-				}	
-				return dtos;
-		}
-		//자유게시판 값 하나 가져오기
-		public BOARD_FDTO BOARD_F(int F_NUM){
+				@SuppressWarnings("resource")
+				public ArrayList<BOARD_FDTO> list_F(){
+					//db검색정보 저장위해 arraylist생성
+					ArrayList<BOARD_FDTO> dtos = new ArrayList<BOARD_FDTO>();
+						Connection con=null;
+						Statement stmt = null;
+						ResultSet rs = null;
+						
+						try {
+							con = getConnection();
+							stmt = con.createStatement();
+							int total = 0;
+							String sqlCount = "SELECT COUNT(*) FROM BOARD_F";
+							rs = stmt.executeQuery(sqlCount);
+							if(rs.next()){
+								total = rs.getInt(1);
+							}
+														
+							String sql= "select * from BOARD_F ORDER BY F_NUM DESC";
+							rs = stmt.executeQuery(sql);					
+							
+							while(rs.next()) {
+								int num = rs.getInt("F_NUM");
+								String title = rs.getString("F_TITLE");
+								String date = rs.getString("F_DATE");
+								String content = rs.getString("F_CONTENT");
+								String writer = rs.getString("U_ID");
+								BOARD_FDTO dto = new BOARD_FDTO(num, title, date, content, writer);
+								dto.setF_Total(total);
+								dtos.add(dto);
+							}
+							
+						}catch(Exception e) {
+							e.printStackTrace();
+						}finally {
+							try { 
+								if(rs!=null) rs.close();
+								if(stmt!=null)stmt.close();
+								if(con!=null) con.close();
+							}catch(Exception e){e.printStackTrace();}
+						}	
+						return dtos;
+				}//list 포토게시판
+				@SuppressWarnings("resource")
+				public ArrayList<BOARD_PDTO> list_P(){
+					//db검색정보 저장위해 arraylist생성
+					ArrayList<BOARD_PDTO> dtos = new ArrayList<BOARD_PDTO>();
+						Connection con=null;
+						Statement stmt = null;
+						ResultSet rs = null;
+						
+						try {
+							con = getConnection();
+							stmt = con.createStatement();
+							int total = 0;
+							String sqlCount = "SELECT COUNT(*) FROM BOARD_P";
+							rs = stmt.executeQuery(sqlCount);
+							if(rs.next()){
+								total = rs.getInt(1);
+							}
+							
+														
+							String sql= "select * from BOARD_P ORDER BY P_NUM DESC";
+							rs = stmt.executeQuery(sql);					
+							
+							while(rs.next()) {
+								int num = rs.getInt("P_NUM");
+								String title = rs.getString("P_TITLE");
+								String date = rs.getString("P_DATE");
+								String file = rs.getString("P_FILE");
+								String writer = rs.getString("U_ID");//가져오는 데이터베이스는 U_ID
+								BOARD_PDTO dto = new BOARD_PDTO(num, title, date, file, writer);
+								dto.setP_Total(total);
+								dtos.add(dto);
+							}	
+						}catch(Exception e) {
+							e.printStackTrace();
+						}finally {
+							try { 
+								if(rs!=null) rs.close();
+								if(stmt!=null)stmt.close();
+								if(con!=null) con.close();
+							}catch(Exception e){e.printStackTrace();}
+						}	
+						return dtos;
+				}
+				//자유게시판 값 하나 가져오기
+				public BOARD_FDTO BOARD_F(int F_NUM){
 
-				Connection con=null;
-				Statement stmt = null;
-				ResultSet rs = null;
-				BOARD_FDTO dto = new BOARD_FDTO();
-			
-				
-				try {
-					con = getConnection();
-					stmt = con.createStatement();
-												
-					String sql= "select * from BOARD_F where F_NUM=?";//받은 자유게시판 아이디로 검색
-					PreparedStatement pstmt = con.prepareStatement(sql);
-					pstmt.setInt(1, F_NUM);
+						Connection con=null;
+						Statement stmt = null;
+						ResultSet rs = null;
+						BOARD_FDTO dto = new BOARD_FDTO();
 					
-					rs = pstmt.executeQuery();					
+						
+						try {
+							con = getConnection();
+							stmt = con.createStatement();
+														
+							String sql= "select * from BOARD_F where F_NUM=?";//받은 자유게시판 아이디로 검색
+							PreparedStatement pstmt = con.prepareStatement(sql);
+							pstmt.setInt(1, F_NUM);
+							
+							rs = pstmt.executeQuery();					
+							
+							while(rs.next()) {//값을 dto에 넣는다.
+								dto.setF_NUM(rs.getInt("F_NUM")); 
+								dto.setF_TITLE(rs.getString("F_TITLE"));
+								dto.setF_DATE(rs.getString("F_DATE"));
+								dto.setF_CONTENT(rs.getString("F_CONTENT"));
+								dto.setU_ID(rs.getString("U_ID"));	
+							}
+							
+						}catch(Exception e) {
+							e.printStackTrace();
+						}finally {
+							try { 
+								if(rs!=null) rs.close();
+								if(stmt!=null)stmt.close();
+								if(con!=null) con.close();
+							}catch(Exception e){e.printStackTrace();}
+						}	
+						return dto;//리턴
+				}
+				//포토게시판 값 하나 가져오기
+				public BOARD_PDTO BOARD_P(int P_NUM){
+
+						Connection con=null;
+						Statement stmt = null;
+						ResultSet rs = null;
+						BOARD_PDTO dto = new BOARD_PDTO();
 					
-					while(rs.next()) {//값을 dto에 넣는다.
-						dto.setF_NUM(rs.getInt("F_NUM")); 
-						dto.setF_TITLE(rs.getString("F_TITLE"));
-						dto.setF_DATE(rs.getString("F_DATE"));
-						dto.setF_CONTENT(rs.getString("F_CONTENT"));
-						dto.setU_ID(rs.getString("U_ID"));	
-					}
-					
-				}catch(Exception e) {
-					e.printStackTrace();
-				}finally {
-					try { 
-						if(rs!=null) rs.close();
-						if(stmt!=null)stmt.close();
-						if(con!=null) con.close();
-					}catch(Exception e){e.printStackTrace();}
-				}	
-				return dto;//리턴
-		}
+						
+						try {
+							con = getConnection();
+							stmt = con.createStatement();
+														
+							String sql= "select * from BOARD_P where P_NUM=?";//받은 자유게시판 아이디로 검색
+							PreparedStatement pstmt = con.prepareStatement(sql);
+							pstmt.setInt(1, P_NUM);
+							
+							rs = pstmt.executeQuery();					
+							
+							while(rs.next()) {//값을 dto에 넣는다.
+								dto.setP_NUM(rs.getInt("P_NUM")); 
+								dto.setP_TITLE(rs.getString("P_TITLE"));
+								dto.setP_DATE(rs.getString("P_DATE"));
+								dto.setP_FILE(rs.getString("P_FILE"));
+								dto.setP_ID(rs.getString("U_ID"));	
+							}
+							
+						}catch(Exception e) {
+							e.printStackTrace();
+						}finally {
+							try { 
+								if(rs!=null) rs.close();
+								if(stmt!=null)stmt.close();
+								if(con!=null) con.close();
+							}catch(Exception e){e.printStackTrace();}
+						}	
+						return dto;//리턴
+				}
 		
 		
 				//listUser
