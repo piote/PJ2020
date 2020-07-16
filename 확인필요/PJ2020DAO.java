@@ -462,6 +462,128 @@ public class PJ2020DAO {
 				}
 			}
 		}
+		//QNA게시판
+		//입력/변경/삭제 함수.
+			public void Q_BOARD_Change(BOARD_QDTO dto, String flag) {
+				Connection con = null; PreparedStatement pstmt = null;
+				String sql=null; ResultSet rs = null;
+				try { 
+					con = getConnection();
+					if(flag.equals("i")) {
+						sql = "INSERT INTO BOARD_Q VALUES(SEQ_Q_NUM.NEXTVAL, ?, ?, ?, ?)";		
+						//3.sql문 준비
+						pstmt = con.prepareStatement(sql);
+						pstmt.setString(1, dto.getQ_TITLE());
+						pstmt.setString(2, dto.getQ_DATE());
+						pstmt.setString(3, dto.getQ_CONTENT());
+						pstmt.setString(4, dto.getU_ID());
+					}else if(flag.equals("u")) {
+						sql = "update BOARD_Q set Q_TITLE=?, Q_DATE=? ,Q_CONTENT=? where Q_NUM=?";//수정시 날짜 변경 허용?
+						pstmt = con.prepareStatement(sql);
+						pstmt.setString(1, dto.getQ_TITLE());
+						pstmt.setString(2, dto.getQ_DATE());
+						pstmt.setString(3, dto.getQ_CONTENT());
+						pstmt.setInt(4, dto.getQ_NUM());
+					}else if(flag.equals("d")) {
+						sql = "delete from BOARD_Q where Q_NUM=?";
+						pstmt = con.prepareStatement(sql);
+						pstmt.setInt(1, dto.getQ_NUM());
+					}
+					pstmt.executeUpdate();
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try {
+						if(pstmt != null) pstmt.close();
+						if(con != null) con.close();
+					}catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			//QNA게시판 값 하나 가져오기
+			public BOARD_QDTO BOARD_Q(int Q_NUM){
+
+					Connection con=null;
+					Statement stmt = null;
+					ResultSet rs = null;
+					BOARD_QDTO dto = new BOARD_QDTO();
+				
+					
+					try {
+						con = getConnection();
+						stmt = con.createStatement();
+													
+						String sql= "select * from BOARD_Q where Q_NUM=?";//받은 자유게시판 아이디로 검색
+						PreparedStatement pstmt = con.prepareStatement(sql);
+						pstmt.setInt(1, Q_NUM);
+						
+						rs = pstmt.executeQuery();					
+						
+						while(rs.next()) {//값을 dto에 넣는다.
+							dto.setQ_NUM(rs.getInt("Q_NUM")); 
+							dto.setQ_TITLE(rs.getString("Q_TITLE"));
+							dto.setQ_DATE(rs.getString("Q_DATE"));
+							dto.setQ_CONTENT(rs.getString("Q_CONTENT"));
+							dto.setU_ID(rs.getString("Q_ID"));	
+						}
+						
+					}catch(Exception e) {
+						e.printStackTrace();
+					}finally {
+						try { 
+							if(rs!=null) rs.close();
+							if(stmt!=null)stmt.close();
+							if(con!=null) con.close();
+						}catch(Exception e){e.printStackTrace();}
+					}	
+					return dto;//리턴
+			}
+			//list QNA게시판
+
+			public ArrayList<BOARD_QDTO> list_Q(){
+				//db검색정보 저장위해 arraylist생성
+				ArrayList<BOARD_QDTO> dtos = new ArrayList<BOARD_QDTO>();
+					Connection con=null;
+					Statement stmt = null;
+					ResultSet rs = null;
+					
+					try {
+						con = getConnection();
+						stmt = con.createStatement();
+						int total = 0;
+						String sqlCount = "SELECT COUNT(*) FROM BOARD_Q";
+						rs = stmt.executeQuery(sqlCount);
+						if(rs.next()){
+							total = rs.getInt(1);
+						}
+													
+						String sql= "select * from BOARD_Q ORDER BY Q_NUM DESC";
+						rs = stmt.executeQuery(sql);					
+						
+						while(rs.next()) {
+							int num = rs.getInt("Q_NUM");
+							String title = rs.getString("Q_TITLE");
+							String date = rs.getString("Q_DATE");
+							String content = rs.getString("Q_CONTENT");
+							String writer = rs.getString("Q_ID");
+							BOARD_QDTO dto = new BOARD_QDTO(num, title, date, content, writer);
+							dto.setQ_Total(total);
+							dtos.add(dto);
+						}
+						
+					}catch(Exception e) {
+						e.printStackTrace();
+					}finally {
+						try { 
+							if(rs!=null) rs.close();
+							if(stmt!=null)stmt.close();
+							if(con!=null) con.close();
+						}catch(Exception e){e.printStackTrace();}
+					}	
+					return dtos;
+			}
+			
 		
 	
 }
