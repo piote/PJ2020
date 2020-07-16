@@ -55,9 +55,9 @@ INSERT INTO WRITER VALUES('익명유저05', 'user_WOW', '와우');
 INSERT INTO WRITER_CLASS VALUES(SEQ_WU_NUM).NEXTVAL, 'MASTER', '익명유저01');
 
 --자유게시판 임의로 추가 NUM값은 반드시 SEQ_ID.NEXTVAL 자동으로 증가를 해야함. 중복을 제거하고 자동으로 숫자 상승
-INSERT INTO BOARD_F VALUES(SEQ_ID.NEXTVAL, '고양이좋아요', '2020-02-13', '고양이는 최고죠, 강아지보단 고양이 아니겠습니까! 뭐라해도 갓냥이', '익명유저01');--일단은 날짜를 년월일만 했지만 시간을 넣어도 문제없어요
-INSERT INTO BOARD_F VALUES(SEQ_ID.NEXTVAL, '강아지귀여워', '2020-02-21', '강아지귀여워, 공던지기하고 싶어', '익명유저02');
-INSERT INTO BOARD_F VALUES(SEQ_ID.NEXTVAL, '사막여우불법', '2020-04-11', '국내는 사막여우 불법이죠;; 허허...', '익명유저03');
-INSERT INTO BOARD_F VALUES(SEQ_ID.NEXTVAL, '앵무 좋아', '2020-02-14', '앵무새가 말따라하는 거 신기해', '익명유저04');
-INSERT INTO BOARD_F VALUES(SEQ_ID.NEXTVAL, '킹갓냥이', '2020-03-15', '킹갓냥이는 산책이 필요없어요', '익명유저05');
+INSERT INTO BOARD_F VALUES(SEQ_F_NUM.NEXTVAL, '고양이좋아요', '2020-02-13', '고양이는 최고죠, 강아지보단 고양이 아니겠습니까! 뭐라해도 갓냥이', '익명유저01');--일단은 날짜를 년월일만 했지만 시간을 넣어도 문제없어요
+INSERT INTO BOARD_F VALUES(SEQ_F_NUM.NEXTVAL, '강아지귀여워', '2020-02-21', '강아지귀여워, 공던지기하고 싶어', '익명유저02');
+INSERT INTO BOARD_F VALUES(SEQ_F_NUM.NEXTVAL, '사막여우불법', '2020-04-11', '국내는 사막여우 불법이죠;; 허허...', '익명유저03');
+INSERT INTO BOARD_F VALUES(SEQ_F_NUM.NEXTVAL, '앵무 좋아', '2020-02-14', '앵무새가 말따라하는 거 신기해', '익명유저04');
+INSERT INTO BOARD_F VALUES(SEQ_F_NUM.NEXTVAL, '킹갓냥이', '2020-03-15', '킹갓냥이는 산책이 필요없어요', '익명유저05');
 
