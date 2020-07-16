@@ -37,7 +37,11 @@ CREATE TABLE BOARD_P(--사진게시판
     U_ID NVARCHAR2(20)
 );
 --시퀸스
-CREATE SEQUENCE SEQ_ID INCREMENT BY 1 START WITH 1000; --이것은 자동증가값입니다. 1000부터 시작해 1씩오르는 명령어 그자리에 SEQ_ID.NEXTVAL 을 사용합니다.
+CREATE SEQUENCE SEQ_F_NUM INCREMENT BY 1 START WITH 1000;--각정보 증가, 자유게시판
+CREATE SEQUENCE SEQ_P_NUM INCREMENT BY 1 START WITH 1000;--포토게시판
+CREATE SEQUENCE SEQ_I_NUM INCREMENT BY 1 START WITH 1000;--정보게시판
+CREATE SEQUENCE SEQ_Q_NUM INCREMENT BY 1 START WITH 1000;--질문게시판
+CREATE SEQUENCE SEQ_WC_NUM INCREMENT BY 1 START WITH 1000;--유저 등급 이것은 자동증가값입니다.
 
 
 --유저를 임의로 추가
@@ -48,7 +52,7 @@ INSERT INTO WRITER VALUES('익명유저04', 'user_EAT', '허기지다');
 INSERT INTO WRITER VALUES('익명유저05', 'user_WOW', '와우');
 
 --임의로 유저를 관리자로 지정 , 일단 관리자를 MASTER라고 쓰기로 생각
-INSERT INTO WRITER_CLASS VALUES(SEQ_ID.NEXTVAL, 'MASTER', '익명유저01');
+INSERT INTO WRITER_CLASS VALUES(SEQ_WU_NUM).NEXTVAL, 'MASTER', '익명유저01');
 
 --자유게시판 임의로 추가 NUM값은 반드시 SEQ_ID.NEXTVAL 자동으로 증가를 해야함. 중복을 제거하고 자동으로 숫자 상승
 INSERT INTO BOARD_F VALUES(SEQ_ID.NEXTVAL, '고양이좋아요', '2020-02-13', '고양이는 최고죠, 강아지보단 고양이 아니겠습니까! 뭐라해도 갓냥이', '익명유저01');--일단은 날짜를 년월일만 했지만 시간을 넣어도 문제없어요
