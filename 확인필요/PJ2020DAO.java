@@ -156,7 +156,7 @@ public class PJ2020DAO {
 			try { 
 				con = getConnection();
 				if(flag.equals("i")) {
-					sql = "INSERT INTO BOARD_F VALUES(SEQ_ID.NEXTVAL, ?, ?, ?, ?)";		
+					sql = "INSERT INTO BOARD_F VALUES(SEQ_F_NUM.NEXTVAL, ?, ?, ?, ?)";		
 					//3.sql문 준비
 					pstmt = con.prepareStatement(sql);
 					pstmt.setString(1, dto.getF_TITLE());
@@ -430,7 +430,7 @@ public class PJ2020DAO {
 			try { 
 				con = getConnection();
 				if(flag.equals("i")) {
-					sql = "INSERT INTO BOARD_P VALUES(SEQ_ID.NEXTVAL,?,?,?,?)";		
+					sql = "INSERT INTO BOARD_P VALUES(SEQ_P_NUM.NEXTVAL,?,?,?,?)";		
 					//3.sql문 준비
 					pstmt = con.prepareStatement(sql);
 					pstmt.setString(1, dto.getP_TITLE());
