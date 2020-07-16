@@ -21,8 +21,11 @@
 	<h2 class="text-center">자유 게시판</h2>
 	
 	<%
-	  dto = dtos.get(0);
-		int total = dto.getF_Total();
+		int total = 0;
+		if(dtos.size() != 0){
+	  	dto = dtos.get(0);
+			total = dto.getF_Total();
+		}
 		out.print("총 게시물 : " + total + "개");
 	%>
 <table width="100%" cellpadding="0" cellspacing="0" border="0">

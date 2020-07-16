@@ -39,8 +39,11 @@
 	<h2 class="text-center">포토 게시판</h2>
 	
 	<%
-	  dto = dtos.get(0);
-		int total = dto.getP_Total();
+		int total = 0;
+		if(dtos.size() != 0){
+	 	 	dto = dtos.get(0);
+			total = dto.getP_Total();
+		}
 		out.print("총 게시물 : " + total + "개");
 	%>
 	<div class="main_list">
