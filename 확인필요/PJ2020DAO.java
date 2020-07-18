@@ -10,6 +10,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+
 public class PJ2020DAO {
 	private static PJ2020DAO instance = new PJ2020DAO();
 	
@@ -582,6 +583,76 @@ public class PJ2020DAO {
 						}catch(Exception e){e.printStackTrace();}
 					}	
 					return dtos;
+			}
+			//전체 레코드 갯수 가져오기.
+			public int getCount() {
+				int count = 0;
+				
+				Connection con = null;
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				String sql = "SELECT COUNT(F_NUM) COUNT FROM BOARD_F";
+				
+				try {
+					PJ2020DAO dao = PJ2020DAO.getInstance();
+					con = dao.getConnection();
+					
+					pstmt = con.prepareStatement(sql);
+					rs = pstmt.executeQuery();
+					
+					if(rs.next())
+					{
+						count = rs.getInt("count");
+					}
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { if(rs!=null) rs.close();
+						if(pstmt!=null) pstmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e) {e.printStackTrace();}
+				}
+				return count;
+			}
+			//메게변수로 주어진 페이지에서 한화면에 출력한 갯수많큼 dto반환
+			public ArrayList<BOARD_FDTO> getListUser(int page, int numOfRecords){
+				
+				ArrayList<BOARD_FDTO> dtos = new ArrayList<BOARD_FDTO>();
+				Connection con=null; PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				
+				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_F ORDER BY F_NUM) L) WHERE NUM BETWEEN ? AND ? ";
+				//1-10/11-20/21-30/
+				try {
+					PJ2020DAO dao = PJ2020DAO.getInstance();
+					con = dao.getConnection();
+					
+					pstmt = con.prepareStatement(sql);
+					pstmt.setInt(1, 1+(page-1)*numOfRecords);
+					pstmt.setInt(2, page*numOfRecords);
+					rs = pstmt.executeQuery();
+					
+					while(rs.next()) {
+						int num = rs.getInt("F_NUM");
+						String title = rs.getString("F_TITLE");
+						String date = rs.getString("F_DATE");
+						String content = rs.getString("F_CONTENT");
+						String user = rs.getString("U_ID");
+						//레코드하나 DTO저장
+						BOARD_FDTO dto = new BOARD_FDTO(num, title, date, content, user);
+						dtos.add(dto);
+					}
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { if(rs!=null) rs.close();
+						if(pstmt!=null) pstmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e) {e.printStackTrace();}
+				} 
+				return dtos;//호출한 jsp파일로 DTO가 저장된 list반환
+				
 			}
 			
 		
