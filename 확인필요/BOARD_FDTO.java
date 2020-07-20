@@ -6,7 +6,6 @@ public class BOARD_FDTO {
 	String F_DATE;
 	String F_CONTENT;
 	String U_ID;
-	int F_Total;
 	
 	
 
@@ -50,11 +49,5 @@ public class BOARD_FDTO {
 	}
 	public void setU_ID(String u_ID) {
 		U_ID = u_ID;
-	}
-	public int getF_Total() {
-		return F_Total;
-	}
-	public void setF_Total(int f_Total) {
-		F_Total = f_Total;
 	}
 }

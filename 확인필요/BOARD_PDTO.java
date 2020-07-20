@@ -6,10 +6,7 @@ public class BOARD_PDTO {
 	String P_DATE;
 	String P_FILE;
 	String P_ID;//유저아이디
-	int P_Total;//총합계
 	
-	
-
 	public BOARD_PDTO() {}
 	
 	public BOARD_PDTO(int P_NUM, String P_TITLE, String P_DATE, String P_FILE,String P_ID) {//메개변수 생성자
@@ -59,13 +56,6 @@ public class BOARD_PDTO {
 
 	public void setP_ID(String p_ID) {
 		P_ID = p_ID;
-	}
-	public int getP_Total() {
-		return P_Total;
-	}
-
-	public void setP_Total(int f_Total) {
-		P_Total = f_Total;
 	}
 	
 }
