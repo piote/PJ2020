@@ -39,6 +39,22 @@ public class PJ2020DAO {
 		}
 		return con;
 	}
+	//=======================================================================
+	//함수 정리
+	/*
+	자유게시판 
+	포토게시판
+	정보게시판
+	질문게시판
+	질문에 댓글관련
+	유저
+	사이트 관리 
+	U_ID_Check()-유저가입시 중복체크
+	U_NICK(U_ID)-유저아이디로 네임 찾기
+	
+	*/
+	//===========================================================================
+	
 	//가입유저중복 체크
 		public Boolean U_ID_Check(String U_ID){
 
@@ -116,7 +132,7 @@ public class PJ2020DAO {
 	//입력/변경/삭제 함수.
 	public void WRITERChange(WRITERDTO dto, String flag) {
 		Connection con = null; PreparedStatement pstmt = null;
-		String sql=null; ResultSet rs = null;
+		String sql=null;
 		try { 
 			con = getConnection();
 			if(flag.equals("i")) {
@@ -153,7 +169,7 @@ public class PJ2020DAO {
 	//입력/변경/삭제 함수.
 		public void F_BOARD_Change(BOARD_FDTO dto, String flag) {
 			Connection con = null; PreparedStatement pstmt = null;
-			String sql=null; ResultSet rs = null;
+			String sql=null;
 			try { 
 				con = getConnection();
 				if(flag.equals("i")) {
@@ -920,6 +936,81 @@ public class PJ2020DAO {
 					return dtos;//호출한 jsp파일로 DTO가 저장된 list반환
 					
 				}
+				//정보게시판
+				//입력/변경/삭제 함수.
+					public void I_BOARD_Change(BOARD_IDTO dto, String flag) {
+						Connection con = null; PreparedStatement pstmt = null;
+						String sql=null;
+						try { 
+							con = getConnection();
+							if(flag.equals("i")) {
+								sql = "INSERT INTO BOARD_I VALUES(SEQ_I_NUM.NEXTVAL, ?, ?, ?, ?, ?)";		
+								//3.sql문 준비
+								pstmt = con.prepareStatement(sql);
+								pstmt.setString(1, dto.getI_TITLE());
+								pstmt.setString(2, dto.getI_DATE());
+								pstmt.setString(3, dto.getI_CONTENT());
+								pstmt.setString(4, dto.getI_FILE());
+								pstmt.setString(5, dto.getU_ID());
+							}else if(flag.equals("u")) {
+								sql = "update BOARD_I set I_TITLE=?, I_DATE=? ,I_CONTENT=?,I_FILE=? where I_NUM=?";//수정시 날짜 변경 허용?
+								pstmt = con.prepareStatement(sql);
+								pstmt.setString(1, dto.getI_TITLE());
+								pstmt.setString(2, dto.getI_DATE());
+								pstmt.setString(3, dto.getI_CONTENT());
+								pstmt.setString(4, dto.getI_FILE());
+								pstmt.setInt(5, dto.getI_NUM());
+							}else if(flag.equals("d")) {
+								sql = "delete from BOARD_I where I_NUM=?";
+								pstmt = con.prepareStatement(sql);
+								pstmt.setInt(1, dto.getI_NUM());
+							}
+							pstmt.executeUpdate();
+						}catch(Exception e) {
+							e.printStackTrace();
+						}finally {
+							try {
+								if(pstmt != null) pstmt.close();
+								if(con != null) con.close();
+							}catch(Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					//유저아이디로 닉네임 값 가져오기
+					public String U_NICK(String U_ID){
+
+							Connection con=null;
+							Statement stmt = null;
+							ResultSet rs = null;
+							String Name= null;
+							
+							try {
+								con = getConnection();
+								stmt = con.createStatement();
+															
+								String sql= "select U_NAME from WRITER where U_ID=?";//받은 아이디로 네임검색
+								PreparedStatement pstmt = con.prepareStatement(sql);
+								pstmt.setString(1, U_ID);
+								
+								rs = pstmt.executeQuery();					
+								
+								if(rs.next())
+								{
+									Name = rs.getString("U_NAME");
+								}
+								
+							}catch(Exception e) {
+								e.printStackTrace();
+							}finally {
+								try { 
+									if(rs!=null) rs.close();
+									if(stmt!=null)stmt.close();
+									if(con!=null) con.close();
+								}catch(Exception e){e.printStackTrace();}
+							}	
+							return Name;//리턴
+					}
 }
 
 
