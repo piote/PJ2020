@@ -47,7 +47,7 @@
 			</div>
 			<div class="form-group">
 				<label for="id">작성자</label>
-				<label for="id"><%=dto.getP_ID() %></label>
+				<label for="id"><%=dbPro.U_NICK(dto.getP_ID()) %></label>
 			</div>		
 	</div>
 </body>

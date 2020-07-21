@@ -79,7 +79,7 @@
 				<a class="aText" href="P_BOARD.jsp?num=<%=num %>">
 					<img src="http://localhost:8080/webPJ2020_1/uploadFiles/<%=file%>" width="200" height="200"/>
 					<%=title %><br>
-					<%=writer %>
+					<%=dbPro.U_NICK(writer) %>
 				</a>
 			</div>
 <% 

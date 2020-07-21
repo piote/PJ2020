@@ -73,7 +73,7 @@
 	<td>&nbsp;</td>
 	<td><%=num %></td>
 	<td align="left"><a href="Q_BOARD.jsp?num=<%=num %>"><%=title %></a></td>
-	<td align="center"><%=writer %></td>
+	<td align="center"><%=dbPro.U_NICK(writer) %></td>
 	<td align="center"><%=date %></td>
 	<td>&nbsp;</td>
 </tr>

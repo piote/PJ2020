@@ -6,7 +6,6 @@
 <%
 	SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 	String ss=sf.format(new java.util.Date());
-	//java.sql.Date t = java.sql.Date.valueOf(ss);
 %>
 <%
 	request.setCharacterEncoding("utf-8");
@@ -53,7 +52,7 @@
 			</div>
 			<div class="form-group">
 				<label for="id">작성자</label>
-				<label for="id"><%=dto.getU_ID() %></label>
+				<label for="id"><%=dbPro.U_NICK(dto.getU_ID()) %></label>
 			</div>		
 	</div>
 </body>

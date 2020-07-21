@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="csdit.WRITERDTO, csdit.PJ2020DAO"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,6 +23,7 @@
 <body>
 
 <%
+	PJ2020DAO	dbPro = new PJ2020DAO();
 
 	String id = null;
 
@@ -44,7 +46,7 @@
 			<%
 				} else {
 			%>
-				<%=id %>
+				<%=dbPro.U_NICK(id) %>
 				<a class="btn" href="logOut.jsp">로그아웃</a>
 			<%
 			
@@ -99,16 +101,11 @@
 
               <div class="collapse navbar-collapse" id="tmMainNav">
                 <ul class="navbar-nav mx-auto tm-navbar-nav">
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">정보게시판</a>
-	                  	<div class="dropdown-menu dropdown-menu-right animate slideIn" aria-labelledby="navbarDropdown">
-						            <a class="dropdown-item" href="#">훈련방법</a>
-						            <a class="dropdown-item" href="#">동물병원</a>
-						            <a class="dropdown-item" href="#">동물정보</a>
-	          					</div>
+                  <li class="nav-item">
+                    <a class="nav-link" href="I_List.jsp">정보게시판</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">질문게시판</a>
+                    <a class="nav-link" href="Q_List.jsp">질문게시판</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="LIST.jsp">자유게시판</a>

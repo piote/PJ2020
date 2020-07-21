@@ -68,7 +68,7 @@
 			</div>
 			<div class="form-group">
 				<label for="id">작성자</label>
-				<label for="id"><%=dto.getU_ID() %></label>
+				<label for="id"><%=dbPro.U_NICK(dto.getU_ID()) %></label>
 			</div>
 			<%		
 				if(session.getAttribute("id") == null) {//현제 있는 세션을 확인하여 로그인 되어있지 않으면 로그인 화면으로 이동
@@ -97,7 +97,7 @@
 <%
 	if(count==0) {
 %>
-			<label>등록된 글이 없습니다.</label>
+			<label>댓글이 없습니다.</label>
 <%
 	 	} else {
 	 		
@@ -110,7 +110,7 @@
 
 	<div>
 	<label><%=content %></label>
-	<label><%=writer %></label>
+	<label><%=dbPro.U_NICK(writer) %></label>
 	<label><%=date %></label>
 	</div>
 <% 

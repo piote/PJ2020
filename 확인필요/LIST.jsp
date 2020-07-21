@@ -18,9 +18,9 @@
 		p = Integer.parseInt(page_);
 	
 	//pageing패키지의 getList()호출 현재 페이지번호를 매개변수로 전달
-	ArrayList<BOARD_FDTO> dtos = dbPro.getListUser(p, numOfRecords);
+	ArrayList<BOARD_FDTO> dtos = dbPro.getList_F(p, numOfRecords);
 	//전체 레코드 수를 추출
-	int count = dbPro.getCount();
+	int count = dbPro.getCount_F();
 	
 	int startNum =p-((p-1)% numOfPages);//화면에 출력될 첫 페이지 번호값 계산
 	int lastNum = (int) Math.ceil((double)count/numOfRecords);//마지막 출력한 페이지
@@ -73,7 +73,7 @@
 	<td>&nbsp;</td>
 	<td><%=num %></td>
 	<td align="left"><a href="F_BOARD.jsp?num=<%=num %>"><%=title %></a></td>
-	<td align="center"><%=writer %></td>
+	<td align="center"><%=dbPro.U_NICK(writer) %></td>
 	<td align="center"><%=date %></td>
 	<td>&nbsp;</td>
 </tr>
