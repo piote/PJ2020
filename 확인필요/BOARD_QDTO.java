@@ -6,7 +6,6 @@ public class BOARD_QDTO {
 	String Q_DATE;
 	String Q_CONTENT;
 	String U_ID;//유저아이디
-	int Q_Total;//총합계
 	
 	public BOARD_QDTO() {}
 	
@@ -49,12 +48,6 @@ public class BOARD_QDTO {
 	}
 	public void setU_ID(String q_ID) {
 		U_ID = q_ID;
-	}
-	public int getQ_Total() {
-		return Q_Total;
-	}
-	public void setQ_Total(int q_Total) {
-		Q_Total = q_Total;
 	}
 	
 }

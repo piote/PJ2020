@@ -511,7 +511,7 @@ public class PJ2020DAO {
 							dto.setQ_TITLE(rs.getString("Q_TITLE"));
 							dto.setQ_DATE(rs.getString("Q_DATE"));
 							dto.setQ_CONTENT(rs.getString("Q_CONTENT"));
-							dto.setU_ID(rs.getString("Q_ID"));	
+							dto.setU_ID(rs.getString("U_ID"));	
 						}
 						
 					}catch(Exception e) {
@@ -537,13 +537,7 @@ public class PJ2020DAO {
 					try {
 						con = getConnection();
 						stmt = con.createStatement();
-						int total = 0;
-						String sqlCount = "SELECT COUNT(*) FROM BOARD_Q";
-						rs = stmt.executeQuery(sqlCount);
-						if(rs.next()){
-							total = rs.getInt(1);
-						}
-													
+								
 						String sql= "select * from BOARD_Q ORDER BY Q_NUM DESC";
 						rs = stmt.executeQuery(sql);					
 						
@@ -552,9 +546,8 @@ public class PJ2020DAO {
 							String title = rs.getString("Q_TITLE");
 							String date = rs.getString("Q_DATE");
 							String content = rs.getString("Q_CONTENT");
-							String writer = rs.getString("Q_ID");
+							String writer = rs.getString("U_ID");
 							BOARD_QDTO dto = new BOARD_QDTO(num, title, date, content, writer);
-							dto.setQ_Total(total);
 							dtos.add(dto);
 						}
 						
@@ -708,10 +701,225 @@ public class PJ2020DAO {
 				} 
 				return dtos;//호출한 jsp파일로 DTO가 저장된 list반환
 				
+			}//전체 레코드 갯수 가져오기.-질문게시판
+			public int getCount_Q() {
+				int count = 0;
+				
+				Connection con = null;
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				String sql = "SELECT COUNT(Q_NUM) COUNT FROM BOARD_Q";
+				
+				try {
+					PJ2020DAO dao = PJ2020DAO.getInstance();
+					con = dao.getConnection();
+					
+					pstmt = con.prepareStatement(sql);
+					rs = pstmt.executeQuery();
+					
+					if(rs.next())
+					{
+						count = rs.getInt("count");
+					}
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { if(rs!=null) rs.close();
+						if(pstmt!=null) pstmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e) {e.printStackTrace();}
+				}
+				return count;
 			}
-			
-		
-	
+			//메게변수로 주어진 페이지에서 한화면에 출력한 갯수많큼 dto반환-질문게시판
+			public ArrayList<BOARD_QDTO> getList_Q(int page, int numOfRecords){
+				
+				ArrayList<BOARD_QDTO> dtos = new ArrayList<BOARD_QDTO>();
+				Connection con=null; PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				
+				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_Q ORDER BY Q_NUM) L) WHERE NUM BETWEEN ? AND ? ";
+				//1-10/11-20/21-30/
+				try {
+					PJ2020DAO dao = PJ2020DAO.getInstance();
+					con = dao.getConnection();
+					
+					pstmt = con.prepareStatement(sql);
+					pstmt.setInt(1, 1+(page-1)*numOfRecords);
+					pstmt.setInt(2, page*numOfRecords);
+					rs = pstmt.executeQuery();
+					
+					while(rs.next()) {
+						int num = rs.getInt("Q_NUM");
+						String title = rs.getString("Q_TITLE");
+						String date = rs.getString("Q_DATE");
+						String content = rs.getString("Q_CONTENT");
+						String user = rs.getString("U_ID");
+						//레코드하나 DTO저장
+						BOARD_QDTO dto = new BOARD_QDTO(num, title, date, content, user);
+						dtos.add(dto);
+					}
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { if(rs!=null) rs.close();
+						if(pstmt!=null) pstmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e) {e.printStackTrace();}
+				} 
+				return dtos;//호출한 jsp파일로 DTO가 저장된 list반환
+				
+			}
+			//답변 댓글
+			//입력/변경/삭제 함수.
+				public void A_BOARD_Change(BOARD_ADTO dto, String flag) {
+					Connection con = null; PreparedStatement pstmt = null;
+					String sql=null; ResultSet rs = null;
+					try { 
+						con = getConnection();
+						if(flag.equals("i")) {
+							sql = "INSERT INTO BOARD_A VALUES(SEQ_A_NUM.NEXTVAL, ?, ?, ?, ?)";		
+							//3.sql문 준비
+							pstmt = con.prepareStatement(sql);
+							pstmt.setString(1, dto.getA_DATE());
+							pstmt.setString(2, dto.getA_CONTENT());
+							pstmt.setString(3, dto.getU_ID());
+							pstmt.setInt(4, dto.getQ_NUM());
+						}else if(flag.equals("u")) {
+							sql = "update BOARD_Q set A_DATE=? ,A_CONTENT=? where A_NUM=?";//수정시 날짜 변경 허용?
+							pstmt = con.prepareStatement(sql);
+							pstmt.setString(1, dto.getA_DATE());
+							pstmt.setString(2, dto.getA_CONTENT());
+							pstmt.setInt(3, dto.getA_NUM());
+						}else if(flag.equals("d")) {
+							sql = "delete from BOARD_A where A_NUM=?";
+							pstmt = con.prepareStatement(sql);
+							pstmt.setInt(1, dto.getA_NUM());
+						}
+						pstmt.executeUpdate();
+					}catch(Exception e) {
+						e.printStackTrace();
+					}finally {
+						try {
+							if(pstmt != null) pstmt.close();
+							if(con != null) con.close();
+						}catch(Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				//list 게시판 댓글
+				public ArrayList<BOARD_ADTO> list_A(int Q_NUM){
+					//db검색정보 저장위해 arraylist생성
+					ArrayList<BOARD_ADTO> dtos = new ArrayList<BOARD_ADTO>();
+						Connection con=null;
+						PreparedStatement pstmt = null;
+						ResultSet rs = null;
+						
+						try {
+							con = getConnection();
+							
+							BOARD_ADTO dto1 = new BOARD_ADTO();	
+							
+							String sql= "select * from BOARD_A WHERE Q_NUM = ? ORDER BY A_NUM DESC";
+							pstmt = con.prepareStatement(sql);
+							pstmt.setInt(1, dto1.getQ_NUM());
+							rs = pstmt.executeQuery(sql);					
+							
+							while(rs.next()) {
+								int num = rs.getInt("A_NUM");
+								String date = rs.getString("A_DATE");
+								String content = rs.getString("A_CONTENT");
+								String writer = rs.getString("U_ID");
+								int id = rs.getInt("Q_NUM");
+								BOARD_ADTO dto = new BOARD_ADTO(num, date, content, writer, id);
+								dtos.add(dto);
+							}
+							
+						}catch(Exception e) {
+							e.printStackTrace();
+						}finally {
+							try { 
+								if(rs!=null) rs.close();
+								if(pstmt!=null)pstmt.close();
+								if(con!=null) con.close();
+							}catch(Exception e){e.printStackTrace();}
+						}	
+						return dtos;
+				}
+				//전체 레코드 갯수 가져오기.-게시판댓글
+				public int getCount_A(int Q_NUM) {
+					int count = 0;
+					
+					Connection con = null;
+					PreparedStatement pstmt = null;
+					ResultSet rs = null;
+					String sql = "SELECT COUNT(A_NUM) COUNT FROM BOARD_A WHERE Q_NUM = ?";
+					
+					try {
+						PJ2020DAO dao = PJ2020DAO.getInstance();
+						con = dao.getConnection();
+						
+						pstmt = con.prepareStatement(sql);
+						pstmt.setInt(1, Q_NUM);
+						rs = pstmt.executeQuery();
+						
+						if(rs.next())
+						{
+							count = rs.getInt("count");
+						}
+						
+					}catch(Exception e) {
+						e.printStackTrace();
+					}finally {
+						try { if(rs!=null) rs.close();
+							if(pstmt!=null) pstmt.close();
+							if(con!=null) con.close();
+						}catch(Exception e) {e.printStackTrace();}
+					}
+					return count;
+				}
+				//메게변수로 주어진 페이지에서 한화면에 출력한 갯수많큼 dto반환-게시판댓글
+				public ArrayList<BOARD_ADTO> getList_A(int page, int numOfRecords, int Q_NUM){
+					
+					ArrayList<BOARD_ADTO> dtos = new ArrayList<BOARD_ADTO>();
+					Connection con=null; PreparedStatement pstmt = null;
+					ResultSet rs = null;
+					
+					String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_A WHERE Q_NUM = ? ORDER BY A_NUM) L) WHERE NUM BETWEEN ? AND ? ";
+					//1-10/11-20/21-30/
+					try {
+						PJ2020DAO dao = PJ2020DAO.getInstance();
+						con = dao.getConnection();
+						
+						pstmt = con.prepareStatement(sql);
+						pstmt.setInt(1, Q_NUM);
+						pstmt.setInt(2, 1+(page-1)*numOfRecords);
+						pstmt.setInt(3, page*numOfRecords);
+						rs = pstmt.executeQuery();
+						
+						while(rs.next()) {
+							int num = rs.getInt("A_NUM");//댓글번호
+							String date = rs.getString("A_DATE");//댓글 날짜
+							String content = rs.getString("A_CONTENT");//댓글 내용
+							String id = rs.getString("U_ID");//작성자
+							int qnum = rs.getInt("Q_NUM");//댓글 소속
+							//레코드하나 DTO저장
+							BOARD_ADTO dto = new BOARD_ADTO(num, date, content, id, qnum);
+							dtos.add(dto);
+						}
+					}catch(Exception e) {
+						e.printStackTrace();
+					}finally {
+						try { if(rs!=null) rs.close();
+							if(pstmt!=null) pstmt.close();
+							if(con!=null) con.close();
+						}catch(Exception e) {e.printStackTrace();}
+					} 
+					return dtos;//호출한 jsp파일로 DTO가 저장된 list반환
+					
+				}
 }
 
 
