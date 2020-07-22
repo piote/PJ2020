@@ -55,6 +55,42 @@ public class PJ2020DAO {
 	*/
 	//===========================================================================
 	
+	//유저 정보 하나 가져오기
+	public WRITERDTO User_info(String U_ID){
+
+			Connection con=null;
+			Statement stmt = null;
+			ResultSet rs = null;
+			WRITERDTO dto = new WRITERDTO();
+		
+			
+			try {
+				con = getConnection();
+				stmt = con.createStatement();
+											
+				String sql= "select * from WRITER where U_ID=?";//받은 자유게시판 아이디로 검색
+				PreparedStatement pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, U_ID);
+				
+				rs = pstmt.executeQuery();					
+				
+				while(rs.next()) {//값을 dto에 넣는다.
+					dto.setId(rs.getString("U_ID"));
+					dto.setPwd(rs.getString("U_PW"));
+					dto.setName(rs.getString("U_NAME"));
+				}
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}finally {
+				try { 
+					if(rs!=null) rs.close();
+					if(stmt!=null)stmt.close();
+					if(con!=null) con.close();
+				}catch(Exception e){e.printStackTrace();}
+			}	
+			return dto;//리턴
+	}
 	//가입유저중복 체크
 		public Boolean U_ID_Check(String U_ID){
 
