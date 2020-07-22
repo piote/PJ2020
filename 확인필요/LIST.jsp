@@ -8,7 +8,6 @@
 	PJ2020DAO	dbPro = new PJ2020DAO();
 	
 	
-	
 	String ward = request.getParameter("ward");
 	
 	int numOfPages = 5;//한화면에 표시되는 페이지 수
@@ -135,7 +134,7 @@
  </div>
  
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr><td colspan="4" height="5"></td></tr>
+  <tr><td></td></tr>
   <tr align="center">
   	<td><a href="게시판.jsp" class="btn">글쓰기</a></td>
   </tr>
