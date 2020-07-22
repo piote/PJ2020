@@ -3,8 +3,11 @@
 <%@ page import="java.sql.*" %>
 <%@page import="csdit.BOARD_PDTO, java.util.ArrayList, csdit.PJ2020DAO"%>
 <%
+	request.setCharacterEncoding("UTF-8");
 	BOARD_PDTO dto = new BOARD_PDTO();
 	PJ2020DAO	dbPro = new PJ2020DAO();
+	
+	String ward = request.getParameter("ward");//검색된단어
 	
 	int numOfPages = 5;//한화면에 표시되는 페이지 수
 	int numOfRecords = 12;//레코드 수
@@ -16,10 +19,28 @@
 	if(page_ != null && !page_.equals(""))
 		p = Integer.parseInt(page_);
 	
+	
+	ArrayList<BOARD_PDTO> dtos;
 	//pageing패키지의 getList()호출 현재 페이지번호를 매개변수로 전달
-	ArrayList<BOARD_PDTO> dtos = dbPro.getList_P(p, numOfRecords);
-	//전체 레코드 수를 추출
-	int count = dbPro.getCount_P();
+	
+	int count = 0;
+	
+	if(ward != null)//ward 검색한 단어가 있을 경우 검색어로 데이터 검색
+	{
+		dtos = dbPro.getList_P(p, numOfRecords, ward);
+		count = dbPro.getCount_P(ward);
+	}
+		else
+	{
+			//pageing패키지의 getList()호출 현재 페이지번호를 매개변수로 전달
+		dtos = dbPro.getList_P(p, numOfRecords);
+		//전체 레코드 수를 추출
+		count = dbPro.getCount_P();
+	}
+	
+	
+ 
+
 	
 	int startNum =p-((p-1)% numOfPages);//화면에 출력될 첫 페이지 번호값 계산
 	int lastNum = (int) Math.ceil((double)count/numOfRecords);//마지막 출력한 페이지

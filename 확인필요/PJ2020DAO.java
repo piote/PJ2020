@@ -538,14 +538,14 @@ public class PJ2020DAO {
 				}
 				return count;
 			}
-			//검색된 레코드 갯수 가져오기.-자유게시판검색
+			//검색된 레코드 갯수 가져오기.-자유게시판검색 제목 검색
 			public int getCount_F(String ward) {
 				int count = 0;
 				
 				Connection con = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
-				String sql = "SELECT COUNT(F_NUM) COUNT FROM BOARD_F WHERE F_CONTENT LIKE ?";
+				String sql = "SELECT COUNT(F_NUM) COUNT FROM BOARD_F WHERE F_TITLE LIKE ?";
 				
 				try {
 					PJ2020DAO dao = PJ2020DAO.getInstance();
@@ -616,7 +616,7 @@ public class PJ2020DAO {
 				Connection con=null; PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				
-				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_F WHERE F_CONTENT LIKE ? ORDER BY F_NUM DESC) L) WHERE NUM BETWEEN ? AND ? ";
+				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_F WHERE F_TITLE LIKE ? ORDER BY F_NUM DESC) L) WHERE NUM BETWEEN ? AND ? ";
 				//1-10/11-20/21-30/
 				try {
 					PJ2020DAO dao = PJ2020DAO.getInstance();
@@ -648,6 +648,78 @@ public class PJ2020DAO {
 				} 
 				return dtos;//호출한 jsp파일로 DTO가 저장된 list반환
 				
+			}
+			//메게변수로 주어진 페이지에서 한화면에 출력한 갯수많큼 dto반환-자유게시판 검색
+			public ArrayList<BOARD_PDTO> getList_P(int page, int numOfRecords, String ward){
+				
+				ArrayList<BOARD_PDTO> dtos = new ArrayList<BOARD_PDTO>();
+				Connection con=null; PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				
+				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_P WHERE P_TITLE LIKE ? ORDER BY P_NUM DESC) L) WHERE NUM BETWEEN ? AND ? ";
+				//1-10/11-20/21-30/
+				try {
+					PJ2020DAO dao = PJ2020DAO.getInstance();
+					con = dao.getConnection();
+					
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, "%"+ward+"%");
+					pstmt.setInt(2, 1+(page-1)*numOfRecords);
+					pstmt.setInt(3, page*numOfRecords);
+					rs = pstmt.executeQuery();
+					
+					while(rs.next()) {
+						int num = rs.getInt("P_NUM");
+						String title = rs.getString("P_TITLE");
+						String date = rs.getString("P_DATE");
+						String file = rs.getString("P_FILE");
+						String user = rs.getString("U_ID");
+						//레코드하나 DTO저장
+						BOARD_PDTO dto = new BOARD_PDTO(num, title, date, file, user);
+						dtos.add(dto);
+					}
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { if(rs!=null) rs.close();
+						if(pstmt!=null) pstmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e) {e.printStackTrace();}
+				} 
+				return dtos;//호출한 jsp파일로 DTO가 저장된 list반환
+				
+			}
+			//검색된 레코드 갯수 가져오기.-포토게시판 검색
+			public int getCount_P(String ward) {
+				int count = 0;
+				
+				Connection con = null;
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				String sql = "SELECT COUNT(P_NUM) COUNT FROM BOARD_P WHERE P_TITLE LIKE ?";
+				
+				try {
+					PJ2020DAO dao = PJ2020DAO.getInstance();
+					con = dao.getConnection();
+					
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, "%"+ward+"%");
+					rs = pstmt.executeQuery();
+					
+					if(rs.next())
+					{
+						count = rs.getInt("count");
+					}
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { if(rs!=null) rs.close();
+						if(pstmt!=null) pstmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e) {e.printStackTrace();}
+				}
+				return count;
 			}
 			//전체 레코드 갯수 가져오기.-포토게시판
 			public int getCount_P() {

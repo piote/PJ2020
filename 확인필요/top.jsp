@@ -34,7 +34,13 @@ function writeCheck()
    
   if(form.Board.value == "F")//검색에 따라 form action 을 바꿔 게시판선택 
    {
-    	form.action="LIST.jsp"
+   	form.action="LIST.jsp";
+   	
+   }else if(form.Board.value == "P"){
+	  form.action="P_List.jsp";
+	  
+   }else if(form.Board.value == "Q"){
+	   form.action="Q_List.jsp";
    }
  
   form.submit();
