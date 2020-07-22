@@ -116,7 +116,7 @@
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">마이페이지</a>
 	                  	<div class="dropdown-menu dropdown-menu-right animate slideIn" aria-labelledby="navbarDropdown">
-						            <a class="dropdown-item" href="#">회원정보</a>
+						            <a class="dropdown-item" href="user_info.jsp">회원정보</a>
 						            <a class="dropdown-item" href="#">MY게시물</a>
 	          					</div>
                   </li>
