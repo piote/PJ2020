@@ -20,6 +20,26 @@
   animation-name: slideIn;
 }
 </style>
+<script language = "javascript">  // 자바 스크립트 시작
+
+function writeCheck()
+  {
+   var form = document.search;
+   
+   if( !form.ward.value )   // form 에 있는  검색값이 없을 때
+   {
+    alert( "검색 할 문자 입력" ); // 경고창 띄움
+    return;
+   }
+   
+  if(form.Board.value == "F")//검색에 따라 form action 을 바꿔 게시판선택 
+   {
+    	form.action="LIST.jsp"
+   }
+ 
+  form.submit();
+  }
+ </script>
 <body>
 
 <%
@@ -67,16 +87,31 @@
           <a href=main.jsp class="btn d-inline-block text-uppercase">ANIMAL</a>
         </div>
         <div class="col-sm-6 d-flex justify-content-center h-100">
-          <form class="form-inline">
-           <div class="form-row">
+        
+        <!-- 검색 기능 -->
+          <form name="search" method="post" class="form-inline">
+           <div class="form-row">   
+                 
+							<div class="col-12 col-md-9 mb-2 mb-md-0"> 
+                <select name="Board">
+									<option value="F">자유게시판</option>
+									<option value="I">정보게시판</option>
+									<option value="P">포토게시판</option>
+									<option value="Q">질문게시판</option>
+								</select>
+              </div>
+              
               <div class="col-12 col-md-9 mb-2 mb-md-0">
-                <input type="text" class="form-control" placeholder="검색어를 입력해주세요.">
+                <input type="text" name="ward" class="form-control" placeholder="검색어를 입력해주세요.">
               </div>
+              
               <div class="col-12 col-md-3">
-                <button type="submit" class="btn btn-block btn-lg btn-primary">검색</button>
+                <button type="button" class="btn btn-block btn-lg btn-primary" onclick="writeCheck()">검색</button>
               </div>
+              
             </div>
 			    </form>
+			     <!-- 검색 기능 -->
         </div>
       </div>
 	</div>

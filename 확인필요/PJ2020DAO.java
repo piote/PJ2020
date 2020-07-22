@@ -240,77 +240,7 @@ public class PJ2020DAO {
 				}
 			}
 		}
-		//list 자유게시판
-				public ArrayList<BOARD_FDTO> list_F(){
-					//db검색정보 저장위해 arraylist생성
-					ArrayList<BOARD_FDTO> dtos = new ArrayList<BOARD_FDTO>();
-						Connection con=null;
-						Statement stmt = null;
-						ResultSet rs = null;
-						
-						try {
-							con = getConnection();
-							stmt = con.createStatement();
-														
-							String sql= "select * from BOARD_F ORDER BY F_NUM DESC";
-							rs = stmt.executeQuery(sql);					
-							
-							while(rs.next()) {
-								int num = rs.getInt("F_NUM");
-								String title = rs.getString("F_TITLE");
-								String date = rs.getString("F_DATE");
-								String content = rs.getString("F_CONTENT");
-								String writer = rs.getString("U_ID");
-								BOARD_FDTO dto = new BOARD_FDTO(num, title, date, content, writer);
-								dtos.add(dto);
-							}
-							
-						}catch(Exception e) {
-							e.printStackTrace();
-						}finally {
-							try { 
-								if(rs!=null) rs.close();
-								if(stmt!=null)stmt.close();
-								if(con!=null) con.close();
-							}catch(Exception e){e.printStackTrace();}
-						}	
-						return dtos;
-				}
-				//list 포토게시판
-				public ArrayList<BOARD_PDTO> list_P(){
-					//db검색정보 저장위해 arraylist생성
-					ArrayList<BOARD_PDTO> dtos = new ArrayList<BOARD_PDTO>();
-						Connection con=null;
-						Statement stmt = null;
-						ResultSet rs = null;
-						
-						try {
-							con = getConnection();
-							stmt = con.createStatement();
-														
-							String sql= "select * from BOARD_P ORDER BY P_NUM DESC";
-							rs = stmt.executeQuery(sql);					
-							
-							while(rs.next()) {
-								int num = rs.getInt("P_NUM");
-								String title = rs.getString("P_TITLE");
-								String date = rs.getString("P_DATE");
-								String file = rs.getString("P_FILE");
-								String writer = rs.getString("U_ID");//가져오는 데이터베이스는 U_ID
-								BOARD_PDTO dto = new BOARD_PDTO(num, title, date, file, writer);
-								dtos.add(dto);
-							}	
-						}catch(Exception e) {
-							e.printStackTrace();
-						}finally {
-							try { 
-								if(rs!=null) rs.close();
-								if(stmt!=null)stmt.close();
-								if(con!=null) con.close();
-							}catch(Exception e){e.printStackTrace();}
-						}	
-						return dtos;
-				}
+	
 				//자유게시판 값 하나 가져오기
 				public BOARD_FDTO BOARD_F(int F_NUM){
 
@@ -576,43 +506,7 @@ public class PJ2020DAO {
 					}	
 					return dto;//리턴
 			}
-			//list QNA게시판
-
-			public ArrayList<BOARD_QDTO> list_Q(){
-				//db검색정보 저장위해 arraylist생성
-				ArrayList<BOARD_QDTO> dtos = new ArrayList<BOARD_QDTO>();
-					Connection con=null;
-					Statement stmt = null;
-					ResultSet rs = null;
-					
-					try {
-						con = getConnection();
-						stmt = con.createStatement();
-								
-						String sql= "select * from BOARD_Q ORDER BY Q_NUM DESC";
-						rs = stmt.executeQuery(sql);					
-						
-						while(rs.next()) {
-							int num = rs.getInt("Q_NUM");
-							String title = rs.getString("Q_TITLE");
-							String date = rs.getString("Q_DATE");
-							String content = rs.getString("Q_CONTENT");
-							String writer = rs.getString("U_ID");
-							BOARD_QDTO dto = new BOARD_QDTO(num, title, date, content, writer);
-							dtos.add(dto);
-						}
-						
-					}catch(Exception e) {
-						e.printStackTrace();
-					}finally {
-						try { 
-							if(rs!=null) rs.close();
-							if(stmt!=null)stmt.close();
-							if(con!=null) con.close();
-						}catch(Exception e){e.printStackTrace();}
-					}	
-					return dtos;
-			}
+		
 			//전체 레코드 갯수 가져오기.-자유게시판
 			public int getCount_F() {
 				int count = 0;
@@ -644,6 +538,38 @@ public class PJ2020DAO {
 				}
 				return count;
 			}
+			//검색된 레코드 갯수 가져오기.-자유게시판검색
+			public int getCount_F(String ward) {
+				int count = 0;
+				
+				Connection con = null;
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				String sql = "SELECT COUNT(F_NUM) COUNT FROM BOARD_F WHERE F_CONTENT LIKE ?";
+				
+				try {
+					PJ2020DAO dao = PJ2020DAO.getInstance();
+					con = dao.getConnection();
+					
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, "%"+ward+"%");
+					rs = pstmt.executeQuery();
+					
+					if(rs.next())
+					{
+						count = rs.getInt("count");
+					}
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { if(rs!=null) rs.close();
+						if(pstmt!=null) pstmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e) {e.printStackTrace();}
+				}
+				return count;
+			}
 			//메게변수로 주어진 페이지에서 한화면에 출력한 갯수많큼 dto반환-자유게시판
 			public ArrayList<BOARD_FDTO> getList_F(int page, int numOfRecords){
 				
@@ -651,7 +577,7 @@ public class PJ2020DAO {
 				Connection con=null; PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				
-				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_F ORDER BY F_NUM) L) WHERE NUM BETWEEN ? AND ? ";
+				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_F ORDER BY F_NUM DESC) L) WHERE NUM BETWEEN ? AND ? ";
 				//1-10/11-20/21-30/
 				try {
 					PJ2020DAO dao = PJ2020DAO.getInstance();
@@ -660,6 +586,46 @@ public class PJ2020DAO {
 					pstmt = con.prepareStatement(sql);
 					pstmt.setInt(1, 1+(page-1)*numOfRecords);
 					pstmt.setInt(2, page*numOfRecords);
+					rs = pstmt.executeQuery();
+					
+					while(rs.next()) {
+						int num = rs.getInt("F_NUM");
+						String title = rs.getString("F_TITLE");
+						String date = rs.getString("F_DATE");
+						String content = rs.getString("F_CONTENT");
+						String user = rs.getString("U_ID");
+						//레코드하나 DTO저장
+						BOARD_FDTO dto = new BOARD_FDTO(num, title, date, content, user);
+						dtos.add(dto);
+					}
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { if(rs!=null) rs.close();
+						if(pstmt!=null) pstmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e) {e.printStackTrace();}
+				} 
+				return dtos;//호출한 jsp파일로 DTO가 저장된 list반환
+				
+			}
+			//메게변수로 주어진 페이지에서 한화면에 출력한 갯수많큼 dto반환-자유게시판 검색
+			public ArrayList<BOARD_FDTO> getList_F(int page, int numOfRecords, String ward){
+				
+				ArrayList<BOARD_FDTO> dtos = new ArrayList<BOARD_FDTO>();
+				Connection con=null; PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				
+				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_F WHERE F_CONTENT LIKE ? ORDER BY F_NUM DESC) L) WHERE NUM BETWEEN ? AND ? ";
+				//1-10/11-20/21-30/
+				try {
+					PJ2020DAO dao = PJ2020DAO.getInstance();
+					con = dao.getConnection();
+					
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, "%"+ward+"%");
+					pstmt.setInt(2, 1+(page-1)*numOfRecords);
+					pstmt.setInt(3, page*numOfRecords);
 					rs = pstmt.executeQuery();
 					
 					while(rs.next()) {
@@ -860,45 +826,7 @@ public class PJ2020DAO {
 						}
 					}
 				}
-				//list 게시판 댓글
-				public ArrayList<BOARD_ADTO> list_A(int Q_NUM){
-					//db검색정보 저장위해 arraylist생성
-					ArrayList<BOARD_ADTO> dtos = new ArrayList<BOARD_ADTO>();
-						Connection con=null;
-						PreparedStatement pstmt = null;
-						ResultSet rs = null;
-						
-						try {
-							con = getConnection();
-							
-							BOARD_ADTO dto1 = new BOARD_ADTO();	
-							
-							String sql= "select * from BOARD_A WHERE Q_NUM = ? ORDER BY A_NUM DESC";
-							pstmt = con.prepareStatement(sql);
-							pstmt.setInt(1, dto1.getQ_NUM());
-							rs = pstmt.executeQuery(sql);					
-							
-							while(rs.next()) {
-								int num = rs.getInt("A_NUM");
-								String date = rs.getString("A_DATE");
-								String content = rs.getString("A_CONTENT");
-								String writer = rs.getString("U_ID");
-								int id = rs.getInt("Q_NUM");
-								BOARD_ADTO dto = new BOARD_ADTO(num, date, content, writer, id);
-								dtos.add(dto);
-							}
-							
-						}catch(Exception e) {
-							e.printStackTrace();
-						}finally {
-							try { 
-								if(rs!=null) rs.close();
-								if(pstmt!=null)pstmt.close();
-								if(con!=null) con.close();
-							}catch(Exception e){e.printStackTrace();}
-						}	
-						return dtos;
-				}
+				
 				//전체 레코드 갯수 가져오기.-게시판댓글
 				public int getCount_A(int Q_NUM) {
 					int count = 0;
@@ -1046,43 +974,7 @@ public class PJ2020DAO {
 							}	
 							return Name;//리턴
 					}
-					//list 정보게시판
-					public ArrayList<BOARD_IDTO> list_I(){
-						//db검색정보 저장위해 arraylist생성
-						ArrayList<BOARD_IDTO> dtos = new ArrayList<BOARD_IDTO>();
-							Connection con=null;
-							Statement stmt = null;
-							ResultSet rs = null;
-							
-							try {
-								con = getConnection();
-								stmt = con.createStatement();
-															
-								String sql= "select * from BOARD_I ORDER BY I_NUM DESC";
-								rs = stmt.executeQuery(sql);					
-								
-								while(rs.next()) {
-									int num = rs.getInt("I_NUM");
-									String title = rs.getString("I_TITLE");
-									String date = rs.getString("I_DATE");
-									String content = rs.getString("I_CONTENT");
-									String file = rs.getString("I_FILE");
-									String writer = rs.getString("U_ID");
-									BOARD_IDTO dto = new BOARD_IDTO(num, title, date, content, file, writer);
-									dtos.add(dto);
-								}
-								
-							}catch(Exception e) {
-								e.printStackTrace();
-							}finally {
-								try { 
-									if(rs!=null) rs.close();
-									if(stmt!=null)stmt.close();
-									if(con!=null) con.close();
-								}catch(Exception e){e.printStackTrace();}
-							}	
-							return dtos;
-					}
+					
 					//정보게시판 값 하나 가져오기
 					public BOARD_IDTO BOARD_I(int I_NUM){
 
