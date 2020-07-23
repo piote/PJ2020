@@ -40,10 +40,14 @@ function writeCheck()
 	  form.action="P_List.jsp";
 	  
    }else if(form.Board.value == "Q"){
-	   form.action="Q_List.jsp";
-   }
+	  form.action="Q_List.jsp";
+	   
+   }else if(form.Board.value == "I"){
+		form.action="I_List.jsp";
+		   
+	 }
  
-  form.submit();
+  form.submit();//해당 패이지로 전송
   }
  </script>
 <body>

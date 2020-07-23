@@ -3,9 +3,12 @@
 <%@ page import="java.sql.*" %>
 <%@page import="csdit.BOARD_IDTO, java.util.ArrayList, csdit.PJ2020DAO"%>
 <%
+	request.setCharacterEncoding("UTF-8");//검색어가 있으면 한글깨짐방지
+	
 	BOARD_IDTO dto = new BOARD_IDTO();
 	PJ2020DAO	dbPro = new PJ2020DAO();
 	
+	String ward = request.getParameter("ward");//검색어가 있으면 받아오기
 	
 	int numOfPages = 5;//한화면에 표시되는 페이지 수
 	int numOfRecords = 10;//레코드 수
@@ -17,10 +20,23 @@
 	if(page_ != null && !page_.equals(""))
 		p = Integer.parseInt(page_);
 	
+	ArrayList<BOARD_IDTO> dtos;
 	//pageing패키지의 getList()호출 현재 페이지번호를 매개변수로 전달
-	ArrayList<BOARD_IDTO> dtos = dbPro.getList_I(p, numOfRecords);
-	//전체 레코드 수를 추출
-	int count = dbPro.getCount_I();
+	
+	int count = 0;
+	
+	if(ward != null)//ward 검색한 단어가 있을 경우 검색어 검색
+	{
+		dtos = dbPro.getList_I(p, numOfRecords, ward);
+		count = dbPro.getCount_I(ward);
+	}
+		else
+	{
+			//pageing패키지의 getList()호출 현재 페이지번호를 매개변수로 전달
+		dtos = dbPro.getList_I(p, numOfRecords);
+		//전체 레코드 수를 추출
+		count = dbPro.getCount_I();
+	}
 	
 	int startNum =p-((p-1)% numOfPages);//화면에 출력될 첫 페이지 번호값 계산
 	int lastNum = (int) Math.ceil((double)count/numOfRecords);//마지막 출력한 페이지
@@ -48,7 +64,7 @@
    <td width="5"><img src="" width="4" height="30" /></td>
    <td width="73">번호</td>
    <td width="379">제목</td>
-   <td width="73">작성자</td>
+   <td width="100">작성자</td>
    <td width="164">작성일</td>  
    <td width="7"><img src="" width="4" height="30" /></td>
   </tr>
