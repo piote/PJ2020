@@ -37,6 +37,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script>
+function writeCheck()
+  {
+   var form = document.writeform;
+   
+   if( !form.A_CONTENT.value )   // form 에 있는댓글 값이 없을 때
+   {
+    alert( "댓글을 입력하세요" ); // 경고창 띄움
+    form.A_CONTENT.focus();   // form 에 있는 댓글 위치로 이동
+    return;
+   }
+ 
+  form.submit();
+  }
+ </script>
 	<meta charset="UTF-8">
 	<title>질문 게시글</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -70,20 +85,23 @@
 				<label for="id">작성자</label>
 				<label for="id"><%=dbPro.U_NICK(dto.getU_ID()) %></label>
 			</div>
+			
+			
 			<%		
 				if(session.getAttribute("id") == null) {//현제 있는 세션을 확인하여 로그인 되어있지 않으면 로그인 화면으로 이동
 					%>
 					<label>댓글은 로그인 후 이용가능합니다.</label>
 					<%
-				}else{
+				}else{ //로그인 되어있다면 댓글을 쓸수있음
 					%>
+				
 				<!--댓글 보내기  -->
-			<form action="A_board_Pro.jsp" method="post">
+			<form name="writeform" action="A_board_Pro.jsp" method="post">
 			<div class="form-group">
 			<textarea name="A_CONTENT" cols="50" rows="4"></textarea>
 			</div>
 			<input type= "hidden" name="Q_NUM" value="<%=num%>"/>
-			<input type="submit" value="댓글달기" class="btn btn-primary">
+			<input type="button" value="댓글달기" class="btn btn-primary" onclick="writeCheck()">
 		</form>			
 			<%
 				}

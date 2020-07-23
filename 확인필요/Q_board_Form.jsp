@@ -29,6 +29,29 @@
 <style>
 	#areaMain{padding:10%; margin-left:10%; margin-right:10%;}
 </style>
+<script language = "javascript">  // 자바 스크립트 시작
+
+function writeCheck()
+  {
+   var form = document.writeform;
+   
+  if( !form.Q_TITLE.value )
+   {
+    alert( "제목을 적어주세요" );
+    form.Q_TITLE.focus();
+    return;
+   }
+ 
+  if( !form.Q_CONTENT.value )
+   {
+    alert( "내용을 적어주세요" );
+    form.Q_CONTENT.focus();
+    return;
+   }
+ 
+  form.submit();
+  }
+ </script>
 <head>
 	<meta charset="UTF-8">
 	<title>질문 게시판</title>
@@ -44,7 +67,7 @@
 	<div class="container">
 		<h2 class="text-center">질문 게시판</h2>
 		
-		<form action="Q_board_Pro.jsp" method="post">
+		<form name="writeform" action="Q_board_Pro.jsp" method="post">
 			<div class="form-group">
 			작성자 <input type="text" name="U_ID" class="form-control" value=<%=id %> readonly>
 			</div>
@@ -58,7 +81,7 @@
 			<div class="form-group">
 			<textarea class="form-control" name="Q_CONTENT" cols="50" rows="13"></textarea>
 			</div>
-			<input type="submit" value="업로드" class="btn bnt-primary">
+			<input type="button" value="업로드" class="btn bnt-primary" onclick="writeCheck()">
 		</form>
 	</div>
 	</section>
