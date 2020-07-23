@@ -11,7 +11,6 @@
 	PJ2020DAO	dbPro = new PJ2020DAO();
 	dto = dbPro.BOARD_I(num);
 
-<<<<<<< HEAD
 	String id = null;
 	String U_class = null;
 	//로그인되어있으면 id값 받아오기. 
@@ -19,8 +18,6 @@
 		id = (String) session.getAttribute("id");
 		U_class = (String) session.getAttribute("class");
 	}
-=======
->>>>>>> d69267d1a5bb172ef15870e6044f1d9e3761c2dc
 %>
 <!DOCTYPE html>
 <html>
@@ -31,23 +28,19 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-<<<<<<< HEAD
+
 	<style>
 	#areaMain{padding:10%; margin-left:10%; margin-right:10%;}
 	</style>
-=======
->>>>>>> d69267d1a5bb172ef15870e6044f1d9e3761c2dc
+
 </head>
 <body>
 <header>
 		<jsp:include page="top.jsp" flush="false"/>
 	</header>
-<<<<<<< HEAD
 <section id = "areaMain">
 	<br>
 
-=======
->>>>>>> d69267d1a5bb172ef15870e6044f1d9e3761c2dc
 	<div class="container">
 	<br>
 	<h1 class="text-center font-weight-bold">정보게시판</h1>
@@ -68,14 +61,14 @@
 				<label for="id">내용</label>
 				<label class="form-control"><%=dto.getI_CONTENT() %></label>
 			</div>
-			<div class="form-group">
-<<<<<<< HEAD
-				<label><img src="http://localhost:8080/webPJ2020_1/IuploadFiles/<%=dto.getI_FILE()%>"></label>
+			<div class="form-group text-center">
+				<label class="form-control"><img src="http://localhost:8080/webPJ2020_1/IuploadFiles/<%=dto.getI_FILE()%>"></label>
 			</div>
 			<div class="form-group">
 				<label for="id">작성자</label>
 				<label class="form-control" for="id"><%=dbPro.U_NICK(dto.getU_ID()) %></label>
 			</div>
+			
 			<div class="form-group text-center">
 				<button type="button" class="btn btn-primary" onclick="location.href='LIST.jsp'">목록</button>
 				<%
@@ -83,19 +76,7 @@
 					if(id.equals(dto.getU_ID()) || U_class != null){ %>
 					<button type="button" class="btn btn-primary" >수정</button>
 				<%} %>
-=======
-				<label for="id">사진</label>
-				<label class="form-control"><img src="http://localhost:8080/webPJ2020_1/IuploadFiles/<%=dto.getI_FILE()%>"><%=dto.getI_FILE() %></label>
 			</div>
-			<div class="form-group">
-				<label for="id">작성자</label>
-				<label for="id" class="form-control"><%=dbPro.U_NICK(dto.getU_ID()) %></label>
-			</div>
-			<div class="form-group text-center">
-				<button type="button" class="btn btn-primary" onclick="location.href='I_List.jsp'">목록</button>
-				<button type="button" class="btn btn-primary" onclick="location.href='adminBoardFUpdateForm.jsp'">수정</button>
->>>>>>> d69267d1a5bb172ef15870e6044f1d9e3761c2dc
-			</div>		
 	</div>
 </body>
 </html>
