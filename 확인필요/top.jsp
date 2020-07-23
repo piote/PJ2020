@@ -22,7 +22,7 @@
 </style>
 <script language = "javascript">  // 자바 스크립트 시작
 
-function writeCheck()
+function searchCheck()
   {
    var form = document.search;
    
@@ -116,7 +116,7 @@ function writeCheck()
               </div>
               
               <div class="col-12 col-md-3">
-                <button type="button" class="btn btn-block btn-lg btn-primary" onclick="writeCheck()">검색</button>
+                <button type="button" class="btn btn-block btn-lg btn-primary" onclick="searchCheck()">검색</button>
               </div>
               
             </div>

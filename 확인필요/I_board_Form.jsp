@@ -31,6 +31,35 @@
 <style>
 	#areaMain{padding:10%; margin-left:10%; margin-right:10%;}
 </style>
+<script>
+function writeCheck()
+  {
+   var form = document.writeform;
+   
+   if( !form.I_FILE.value )   // form 에 있는 name 값이 없을 때
+   {
+    alert( "이미지파일이 없습니다" ); // 경고창 띄움
+    form.I_FILE.focus();   // form 에 있는 name 위치로 이동
+    return;
+   }
+   
+  if( !form.I_TITLE.value )
+   {
+    alert( "제목을 적어주세요" );
+    form.I_TITLE.focus();
+    return;
+   }
+ 
+  if( !form.I_CONTENT.value )
+   {
+    alert( "내용을 적어주세요" );
+    form.I_CONTENT.focus();
+    return;
+   }
+ 
+  form.submit();
+  }
+ </script>
 <head>
 	<meta charset="UTF-8">
 	<title>정보 게시판</title>
@@ -45,7 +74,8 @@
 	<br>
 	<div class="container">
 		<h2 class="text-center">정보 게시판</h2>
-		<form action="I_board_Pro.jsp" method="post" enctype="multipart/form-data">
+		
+		<form name="writeform" action="I_board_Pro.jsp" method="post" enctype="multipart/form-data">
 			<div class="form-group">
 			작성자 <input type="text" name="U_ID" class="form-control" value=<%=id %> readonly>
 			</div>
@@ -60,7 +90,7 @@
 			<textarea name="I_CONTENT" rows="13" class="form-control"></textarea>
 			</div>
 			<input type="file" accept="image/*" name="I_FILE" class="btn btn-success"><br><br>
-			<input type="submit" value="업로드" class="btn bnt-primary">
+			<input type="button" value="업로드" class="btn bnt-primary" onclick="writeCheck()">
 		</form>
 	</div>
 	</section>
