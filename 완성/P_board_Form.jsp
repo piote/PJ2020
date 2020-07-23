@@ -51,7 +51,7 @@ if(session.getAttribute("id") != null) {
 			</div>
 			<input type="file" accept="image/*" name="P_FILE" class="btn btn-success"><br><br>
 			<div class="text-center">
-				<button type="button" class="btn btn-primary" onclick="location.href='LIST.jsp'">목록</button>
+				<button type="button" class="btn btn-primary" onclick="location.href='P_List.jsp'">목록</button>
 				<input type="submit" value="등록" class="btn btn-primary">
 			</div>
 		</form>
