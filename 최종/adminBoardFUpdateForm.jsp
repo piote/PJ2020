@@ -2,35 +2,20 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@page import="csdit.BOARD_FDTO, csdit.PJ2020DAO"%>
 <%
 	SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 	String ss=sf.format(new java.util.Date());
+	//java.sql.Date t = java.sql.Date.valueOf(ss);
 %>
+
 <%
 	request.setCharacterEncoding("utf-8");
-	
-	String i = request.getParameter("num");
-	int num = Integer.parseInt(i);//넘어온 num을 변환
-	
-	BOARD_FDTO dto = new BOARD_FDTO();
-	PJ2020DAO	dbPro = new PJ2020DAO();
-	dto = dbPro.BOARD_F(num);
-	
-	String id = null;   
-	String U_class = null;
-	//로그인되어있으면 id값 받아오기. 
-	if(session.getAttribute("id") != null) {
-		id = (String) session.getAttribute("id");
-		U_class = (String) session.getAttribute("class");
-	}
+	String num = request.getParameter("num");
+	String id = request.getParameter("id");
 %>
+
 <!DOCTYPE html>
 <html>
-<style>
-	#areaMain{padding:10%; margin-left:10%; margin-right:10%;}
-</style>
-
 <head>
 	<meta charset="UTF-8">
 	<title>게시글 수정</title>
@@ -41,44 +26,38 @@
 </head>
 <body>
 
-<header>
-		<jsp:include page="top.jsp" flush="false"/>
-	</header>
-<section id = "areaMain">
-	<br>
-
 	<div class="container">
 	<br>
-	<h1 class="text-center font-weight-bold">자유게시판</h1>
+	<h1 class="text-center font-weight-bold">게시글 수정</h1>
 	
+		<form action="adminBoardFUpdatePro.jsp" method="post">
 			<div class="form-group">
 				<label for="id">글번호</label>
-				<label class="form-control"><%=num %></label>
+				<input type="text" class="form-control" id="num" name="num" value=<%=num %>>
 			</div>
 			<div class="form-group">
 				<label for="id">제목</label>
-				<label class="form-control"><%=dto.getF_TITLE() %></label>
+				<input type="text" class="form-control" id="title" name="title">
 			</div>
 			<div class="form-group">
 				<label for="id">날짜</label>
-				<label class="form-control"><%=dto.getF_DATE() %></label>
+				<input type="date" class="form-control" id="date" name="date" value=<%=ss %> readonly="readonly">
 			</div>
 			<div class="form-group">
 				<label for="id">내용</label>
-				<label class="form-control"><%=dto.getF_CONTENT() %></label>
+				<textarea rows="6" cols="" class="form-control" id="content" name="content"></textarea>
 			</div>
 			<div class="form-group">
 				<label for="id">작성자</label>
-				<label for="id" class="form-control"><%=dbPro.U_NICK(dto.getU_ID()) %></label>
+				<label for="id"><%=id %></label>
+			</div>		
+			<div class="text-center">
+				<button type="submit" class="btn btn-secondary">변경</button>
+				<button type="button" class="btn btn-secondary" onclick="location.href='F_BOARD.jsp?num=<%=num%>'">취소</button>
+				<button type="button" class="btn btn-secondary" onclick="location.href='adminBoardFDelete.jsp?num=<%=num%>'">삭제</button>
+				<button type="reset" class="btn btn-secondary">다시작성</button>
 			</div>
-			<div class="form-group text-center">
-				<button type="button" class="btn btn-primary" onclick="location.href='LIST.jsp'">목록</button>
-				<%
-				if(id!=null)//null 오류방지
-					if(id.equals(dto.getU_ID()) || U_class != null){ %>
-					<button type="button" class="btn btn-primary" onclick="location.href='adminBoardFUpdateForm.jsp?num=<%=num %>&id=<%=dto.getU_ID()%>'">수정</button>
-				<%} %>
-			</div>
-	</section>
+		</form>
+	</div>
 </body>
 </html>
