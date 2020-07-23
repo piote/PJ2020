@@ -904,7 +904,7 @@ public class PJ2020DAO {
 				Connection con=null; PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				
-				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_P ORDER BY P_NUM) L) WHERE NUM BETWEEN ? AND ? ";
+				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_P ORDER BY P_NUM DESC) L) WHERE NUM BETWEEN ? AND ? ";
 				//1-10/11-20/21-30/
 				try {
 					PJ2020DAO dao = PJ2020DAO.getInstance();
@@ -973,7 +973,7 @@ public class PJ2020DAO {
 				Connection con=null; PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				
-				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_Q ORDER BY Q_NUM) L) WHERE NUM BETWEEN ? AND ? ";
+				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_Q ORDER BY Q_NUM DESC) L) WHERE NUM BETWEEN ? AND ? ";
 				//1-10/11-20/21-30/
 				try {
 					PJ2020DAO dao = PJ2020DAO.getInstance();
@@ -1269,7 +1269,7 @@ public class PJ2020DAO {
 						Connection con=null; PreparedStatement pstmt = null;
 						ResultSet rs = null;
 						
-						String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_I ORDER BY I_NUM) L) WHERE NUM BETWEEN ? AND ? ";
+						String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_I ORDER BY I_NUM DESC) L) WHERE NUM BETWEEN ? AND ? ";
 						//1-10/11-20/21-30/
 						try {
 							PJ2020DAO dao = PJ2020DAO.getInstance();
