@@ -762,7 +762,7 @@ public class PJ2020DAO {
 				return dtos;//호출한 jsp파일로 DTO가 저장된 list반환
 				
 			}
-			//검색된 레코드 갯수 가져오기.-포토게시판 검색
+			//검색된 레코드 갯수 가져오기.정보 게시판 검색
 			public int getCount_I(String ward) {
 				int count = 0;
 				
@@ -770,6 +770,78 @@ public class PJ2020DAO {
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				String sql = "SELECT COUNT(I_NUM) COUNT FROM BOARD_I WHERE I_TITLE LIKE ?";
+				
+				try {
+					PJ2020DAO dao = PJ2020DAO.getInstance();
+					con = dao.getConnection();
+					
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, "%"+ward+"%");
+					rs = pstmt.executeQuery();
+					
+					if(rs.next())
+					{
+						count = rs.getInt("count");
+					}
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { if(rs!=null) rs.close();
+						if(pstmt!=null) pstmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e) {e.printStackTrace();}
+				}
+				return count;
+			}
+			//메게변수로 주어진 페이지에서 한화면에 출력한 갯수많큼 dto반환-질문게시판 검색
+			public ArrayList<BOARD_QDTO> getList_Q(int page, int numOfRecords, String ward){
+				
+				ArrayList<BOARD_QDTO> dtos = new ArrayList<BOARD_QDTO>();
+				Connection con=null; PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				
+				String sql = "SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (SELECT * FROM BOARD_Q WHERE Q_TITLE LIKE ? ORDER BY Q_NUM DESC) L) WHERE NUM BETWEEN ? AND ? ";
+				//1-10/11-20/21-30/
+				try {
+					PJ2020DAO dao = PJ2020DAO.getInstance();
+					con = dao.getConnection();
+					
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, "%"+ward+"%");
+					pstmt.setInt(2, 1+(page-1)*numOfRecords);
+					pstmt.setInt(3, page*numOfRecords);
+					rs = pstmt.executeQuery();
+					
+					while(rs.next()) {
+						int num = rs.getInt("Q_NUM");
+						String title = rs.getString("Q_TITLE");
+						String date = rs.getString("Q_DATE");
+						String content = rs.getString("Q_CONTENT");
+						String user = rs.getString("U_ID");
+						//레코드하나 DTO저장
+						BOARD_QDTO dto = new BOARD_QDTO(num, title, date, content, user);
+						dtos.add(dto);
+					}
+				}catch(Exception e) {
+					e.printStackTrace();
+				}finally {
+					try { if(rs!=null) rs.close();
+						if(pstmt!=null) pstmt.close();
+						if(con!=null) con.close();
+					}catch(Exception e) {e.printStackTrace();}
+				} 
+				return dtos;//호출한 jsp파일로 DTO가 저장된 list반환
+				
+			}
+			//검색된 레코드 갯수 가져오기.질문 게시판 검색
+			public int getCount_Q(String ward) {
+				int count = 0;
+				
+				Connection con = null;
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				String sql = "SELECT COUNT(Q_NUM) COUNT FROM BOARD_Q WHERE Q_TITLE LIKE ?";
 				
 				try {
 					PJ2020DAO dao = PJ2020DAO.getInstance();
