@@ -36,6 +36,9 @@
 %>
 <!DOCTYPE html>
 <html>
+<style>
+	#areaMain{padding:10%; margin-left:10%; margin-right:10%;}
+</style>
 <head>
 	<meta charset="UTF-8">
 	<title>질문 게시글</title>
@@ -48,9 +51,11 @@
 <header>
 		<jsp:include page="top.jsp" flush="false"/>
 	</header>
+	<section id="areaMain">
+	<br>
 	<div class="container">
 	<br>
-	<h1 class="text-center font-weight-bold">게시글 수정</h1>
+	<h1 class="text-center font-weight-bold">질문게시판</h1>
 	
 			<div class="form-group">
 				<label for="id">글번호</label>
@@ -72,6 +77,7 @@
 				<label for="id">작성자</label>
 				<label for="id" class="form-control"><%=dto.getU_ID() %></label>
 			</div>
+			<hr>
 			<%		
 				if(session.getAttribute("id") == null) {//현제 있는 세션을 확인하여 로그인 되어있지 않으면 로그인 화면으로 이동
 					%>
@@ -79,23 +85,18 @@
 					<%
 				}else{
 					%>
-				<!--댓글 보내기  -->
-			<form action="A_board_Pro.jsp" method="post">
-			<div class="form-group">
-			<textarea name="A_CONTENT" cols="50" rows="4"></textarea>
-			</div>
-			<input type= "hidden" name="Q_NUM" value="<%=num%>"/>
-			<input type="submit" value="댓글달기" class="btn btn-primary">
-		</form>			
-			<%
-				}
-			%>			
-	
-	
-	<!-- 댓글 리스트 -->
+					
+					<!-- 댓글 리스트 -->
+					
+					<!-- 현제페이지/전체페이지 출력-->
+ <div class="d-flex justify-content-end">
+ 	<span><%=p %></span>&nbsp;&nbsp;/ <%=lastNum %> pages
+ 	
+ </div>
 		<%
 		out.print("총 댓글 : " + count + "개");
 	%>
+	 
 <%
 	if(count==0) {
 %>
@@ -110,22 +111,37 @@
 				String writer = dtoA.getU_ID();					
 %>
 
-	<div>
-	<label><%=content %></label>
-	<label><%=writer %></label>
-	<label><%=date %></label>
+	<div class="container">
+		<hr>
+		<label><%=writer %></label>
+		<label><%=date %></label>
+		<br>
+		<label><%=content %></label>
 	</div>
 <% 
 	 		}
 	}
 %>
- <!-- 현제페이지/전체페이지 출력-->
- <div class="d-flex justify-content-end">
- 	<span><%=p %></span>&nbsp;&nbsp;/ <%=lastNum %> pages
- </div>
+				<!--댓글 보내기  -->
+			<form action="A_board_Pro.jsp" method="post">
+			<div class="form-group">
+			댓글<textarea class="form-control" name="A_CONTENT" cols="50" rows="2"></textarea>
+			</div>
+			<input type= "hidden" name="Q_NUM" value="<%=num%>"/>
+			<input type="submit" value="댓글달기" class="btn btn-primary" style="float:right;">
+		</form>			
+			<%
+				}
+			%>			
+	
+	
+	
+
+ 
+ 
  <!-- 페이지 나누기 -->
  <div class="d-flex justify-content-center">
-	 <ul class="pagination">
+	 <ul class="pagination pagination-sm">
 	 	<% if(startNum > 1) { %>
 	 		<li class = "page-itme"><a class="page-link" href="?p=<%=startNum-1%>">Prev</a></li>
 	 	<%}else{ //1보다 작거나 같은 것은 가장 첫페이지 %>
@@ -148,7 +164,11 @@
 	 	<%}// %>
 	 </ul>
  </div>
+ <div class="form-group text-center">
+				<button type="button" class="btn btn-primary" onclick="location.href='Q_List.jsp'">목록</button>
+				<button type="button" class="btn btn-primary" onclick="location.href='adminBoardFUpdateForm.jsp'">수정</button>
+			</div>
  </div>
-		
+</section>		
 </body>
 </html>
