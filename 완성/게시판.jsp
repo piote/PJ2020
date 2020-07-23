@@ -70,9 +70,11 @@ function writeCheck()
 			<div class="form-group">
 			내용<textarea class="form-control" name="F_CONTENT" cols="50" rows="13"></textarea>
 			</div>
-			<input type=button value="등록" class="btn btn-primary" OnClick="javascript:writeCheck();">
-			<input type=button value="취소" class="btn btn-primary" OnClick="javascript:history.back(-1)">
-		</form>
+			<div class="text-center">
+				<input type=button value="등록" class="btn btn-primary" OnClick="javascript:writeCheck();">
+				<input type=button value="취소" class="btn btn-primary" OnClick="javascript:history.back(-1)">
+			</div>
+			</form>
 	</div>
 	
  </section>
