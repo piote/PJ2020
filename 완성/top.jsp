@@ -21,7 +21,6 @@
 }
 </style>
 <script language = "javascript">  // 자바 스크립트 시작
-
 function searchCheck()
   {
    var form = document.search;
@@ -90,7 +89,7 @@ function searchCheck()
 	
       <div class="row w-75">
         <div class="col-sm-6 social-links text-right">
-          <a href=main.jsp class="btn d-inline-block text-uppercase">ANIMAL</a>
+          <a href=main.jsp class="btn d-inline-block text-uppercase" style="font-size:25px;">ANIMAL</a>
         </div>
         
         
