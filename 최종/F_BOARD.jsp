@@ -1,12 +1,6 @@
-<%@page import="java.sql.Timestamp"%>
-<%@page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="csdit.BOARD_FDTO, csdit.PJ2020DAO"%>
-<%
-	SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-	String ss=sf.format(new java.util.Date());
-%>
 <%
 	request.setCharacterEncoding("utf-8");
 	

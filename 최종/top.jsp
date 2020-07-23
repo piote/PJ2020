@@ -21,7 +21,6 @@
 }
 </style>
 <script language = "javascript">  // 자바 스크립트 시작
-
 function searchCheck()
   {
    var form = document.search;
@@ -55,11 +54,8 @@ function searchCheck()
 <%
 	PJ2020DAO	dbPro = new PJ2020DAO();
 	String id = null;
-	String U_class = null;
-	
 	if(session.getAttribute("id") != null) {
 		id = (String) session.getAttribute("id");
-		U_class = (String) session.getAttribute("class");
 	}
 %>
 	<!-- ======= Top Bar ======= -->
@@ -74,12 +70,6 @@ function searchCheck()
 				<a href=signUp.jsp class="btn">회원가입</a>
 			<%
 				} else {
-					if(U_class != null)//관리자이면 null이 아니기에 관리자문구 뛰우기
-					{
-						%>
-						환영합니다 관리자님
-						<%
-					}
 			%>
 				<%=dbPro.U_NICK(id) %>
 				<a class="btn" href="logOut.jsp">로그아웃</a>
@@ -99,7 +89,7 @@ function searchCheck()
 	
       <div class="row w-75">
         <div class="col-sm-6 social-links text-right">
-          <a href=main.jsp class="btn d-inline-block text-uppercase">ANIMAL</a>
+          <a href=main.jsp class="btn d-inline-block text-uppercase" style="font-size:25px;">ANIMAL</a>
         </div>
         
         
@@ -161,10 +151,13 @@ function searchCheck()
                   <li class="nav-item">
                     <a class="nav-link" href="P_List.jsp">포토게시판</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="user_info.jsp">회원정보</a>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">마이페이지</a>
+	                  	<div class="dropdown-menu dropdown-menu-right animate slideIn" aria-labelledby="navbarDropdown">
+						            <a class="dropdown-item" href="user_info.jsp">회원정보</a>
+						            <a class="dropdown-item" href="#">MY게시물</a>
+	          					</div>
                   </li>
-                 
                 </ul>
               </div>
             </nav>

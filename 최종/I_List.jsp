@@ -1,16 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
-<%@page import="csdit.BOARD_PDTO, java.util.ArrayList, csdit.PJ2020DAO"%>
+<%@page import="csdit.BOARD_IDTO, java.util.ArrayList, csdit.PJ2020DAO"%>
 <%
-	request.setCharacterEncoding("UTF-8");//한글깨짐방지
-	BOARD_PDTO dto = new BOARD_PDTO();
+	request.setCharacterEncoding("UTF-8");//검색어가 있으면 한글깨짐방지
+	
+	BOARD_IDTO dto = new BOARD_IDTO();
 	PJ2020DAO	dbPro = new PJ2020DAO();
 	
 	String ward = request.getParameter("ward");//검색어가 있으면 받아오기
 	
 	int numOfPages = 5;//한화면에 표시되는 페이지 수
-	int numOfRecords = 12;//레코드 수
+	int numOfRecords = 10;//레코드 수
 	
 	//page 전달 예외사항, 번호를 얻고 null이가나 빈문자열이아니라는 것을 확인
 	String page_ = request.getParameter("p");
@@ -19,22 +20,22 @@
 	if(page_ != null && !page_.equals(""))
 		p = Integer.parseInt(page_);
 	
-	ArrayList<BOARD_PDTO> dtos;
+	ArrayList<BOARD_IDTO> dtos;
 	//pageing패키지의 getList()호출 현재 페이지번호를 매개변수로 전달
 	
 	int count = 0;
 	
 	if(ward != null)//ward 검색한 단어가 있을 경우 검색어 검색
 	{
-		dtos = dbPro.getList_P(p, numOfRecords, ward);
-		count = dbPro.getCount_P(ward);
+		dtos = dbPro.getList_I(p, numOfRecords, ward);
+		count = dbPro.getCount_I(ward);
 	}
 		else
 	{
 			//pageing패키지의 getList()호출 현재 페이지번호를 매개변수로 전달
-		dtos = dbPro.getList_P(p, numOfRecords);
+		dtos = dbPro.getList_I(p, numOfRecords);
 		//전체 레코드 수를 추출
-		count = dbPro.getCount_P();
+		count = dbPro.getCount_I();
 	}
 	
 	int startNum =p-((p-1)% numOfPages);//화면에 출력될 첫 페이지 번호값 계산
@@ -45,91 +46,70 @@
 <html>
 <style>
 	#areaMain{padding:10%; margin-left:10%; margin-right:10%;}
-	.main_list {
-    width: 1000px;
-	}
-	.list_start {
-    text-align: left;
-	}
-	.list_detail {
-    display: inline-block;
-    width: 220px;
-    height: 260px;
-		border: 1px solid;
-    margin-bottom: 5px;
-	}
-	.aText{
-	 	color: black; /*글자 색변경*/
-	}
-	
 </style>
-
  <head>
  <title>게시판</title>
  </head>
  <body>
 	<jsp:include page="top.jsp" flush="false"/>
 	<section id="areaMain">
-	<h2 class="text-center">포토 게시판</h2>
-
-	<div class="container">
+	<h2 class="text-center">정보 게시판</h2>
 	
-
-  <!-- Page Heading -->
- 
-      
 	<%
-	if(ward != null)
+	if(ward != null)//무엇을 검색했는지, 얼마나 검색되었는지 확인
 		out.print(ward+"의 검색결과");
 	out.print("총 게시물 : " + count + "개");
 	%>
-	  			     <div class="row">
-		<%
-			if(count==0) {
-		%>
-		<label>등록된 사진이 없습니다.</label>
-		
-		<%	 		
-			} else {
-		 		for(int i=0; i<dtos.size(); i++){
-					dto = dtos.get(i);
-					int num = dto.getP_NUM();
-					String title = dto.getP_TITLE();
-					String date = dto.getP_DATE();
-					String file = dto.getP_FILE();
-					String writer = dto.getP_ID();					
-%>	
-    <div class="col-lg-3 col-sm-6 mb-4">
-			<div class="card" style="width: 200px;">
-        <a class="aText" href="P_BOARD.jsp?num=<%=num %>">
-					<img src="http://localhost:8080/webPJ2020_1/uploadFiles/<%=file%>" width="200" height="200"/>					
-				</a>
-        <div class="card-body" >
-          <h6 class="card-title">
-            <a href="#" class="aText"><%=title %></a>
-          </h6>
-						<a href="#" class="aText"><%=dbPro.U_NICK(writer) %></a>
-        </div>
-      </div>
-      </div>
-      <% 
-	 			}
+	
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr height="4"><td width="4"></td></tr>
+ <tr style="background:url('') repeat-x; text-align:center;">
+   <td width="5"><img src="" width="4" height="30" /></td>
+   <td width="73">번호</td>
+   <td width="379">제목</td>
+   <td width="100">작성자</td>
+   <td width="164">작성일</td>  
+   <td width="7"><img src="" width="4" height="30" /></td>
+  </tr>
+<%
+	if(count==0) {
+%>
+	 		<tr align="center" bgcolor="#FFFFFF" height="30">
+	 	   <td colspan="6">등록된 글이 없습니다.</td>
+	 	  </tr>
+<%
+	 	} else {
+	 		
+	 		for(int i=0; i<dtos.size(); i++){
+				dto = dtos.get(i);
+				int num = dto.getI_NUM();
+				String title = dto.getI_TITLE();
+				String date = dto.getI_DATE();
+				String content = dto.getI_CONTENT();
+				String writer = dto.getU_ID();					
+%>
+<tr height="25" align="center">
+	<td>&nbsp;</td>
+	<td><%=num %></td>
+	<td align="left"><a href="I_BOARD.jsp?num=<%=num %>"><%=title %></a></td>
+	<td align="center"><%=dbPro.U_NICK(writer) %></td>
+	<td align="center"><%=date %></td>
+	<td>&nbsp;</td>
+</tr>
+  <tr height="1" bgcolor="#D2D2D2"><td colspan="6"></td></tr>
+<% 
 	 		}
-%>	
-      </div>
-
-  </div>
-  
-   <!-- 현제페이지/전체페이지 출력-->
+	}
+%>
+ <tr height="1" bgcolor="#82B5DF"><td colspan="6" width="752"></td></tr>
+ </table>
+ <!-- 현제페이지/전체페이지 출력-->
  <div class="d-flex justify-content-end">
  	<span><%=p %></span>&nbsp;&nbsp;/ <%=lastNum %> pages
  </div>
- 
  <!-- 페이지 나누기 -->
  <div class="d-flex justify-content-center">
- 	 
 	 <ul class="pagination">
-
 	 	<% if(startNum > 1) { %>
 	 		<li class = "page-itme"><a class="page-link" href="?p=<%=startNum-1%>">Prev</a></li>
 	 	<%}else{ //1보다 작거나 같은 것은 가장 첫페이지 %>
@@ -148,21 +128,17 @@
 	 			if(startNum + numOfPages <= lastNum){	//레코드 마지막 번호를 알고있어야함%>
 	 				<li class="page-item"><a class="page-link" href="?p=<%=startNum+5 %>">Next</a></li>
 		<%}else{ %>	 		
-		
 	 		<li class = "page-itme"><a class="page-link" style="gray" onclick="alert('다음페이지가 없습니다')" href="#">Next</a></li>
 	 	<%}// %>
-	 	
 	 </ul>
-	 
  </div>
-			  
-			<div class="form-group text-right">
-				<button type="button" class="btn btn-primary" onclick="location.href='P_board_Form.jsp'">글쓰기</button>
-			</div>
-
+ 
+<div class="form-group text-right">
+				<button type="button" class="btn btn-primary" onclick="location.href='I_board_Form.jsp'">글쓰기</button>
+</div>
 
 </section>
 </body> 
-
 </html>
+
 
