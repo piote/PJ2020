@@ -55,8 +55,11 @@ function searchCheck()
 <%
 	PJ2020DAO	dbPro = new PJ2020DAO();
 	String id = null;
+	String U_class = null;
+	
 	if(session.getAttribute("id") != null) {
 		id = (String) session.getAttribute("id");
+		U_class = (String) session.getAttribute("class");
 	}
 %>
 	<!-- ======= Top Bar ======= -->
@@ -71,6 +74,12 @@ function searchCheck()
 				<a href=signUp.jsp class="btn">회원가입</a>
 			<%
 				} else {
+					if(U_class != null)//관리자이면 null이 아니기에 관리자문구 뛰우기
+					{
+						%>
+						환영합니다 관리자님
+						<%
+					}
 			%>
 				<%=dbPro.U_NICK(id) %>
 				<a class="btn" href="logOut.jsp">로그아웃</a>
